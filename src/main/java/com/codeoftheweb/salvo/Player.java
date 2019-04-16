@@ -5,13 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
+@Entity // tells Spring to create a player table for this class
 public class Player {
 
     private String userName;
     private String email;
 
-    @Id
+    @Id // unique value for every instance of player
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
