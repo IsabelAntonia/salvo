@@ -1,19 +1,20 @@
 package com.codeoftheweb.salvo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
-@Entity // tells Spring to create a player table for this class
+@Entity
 public class Player {
 
     private String userName;
     private String email;
 
-    @Id // unique value for every instance of player
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @OneToMany(mappedBy="game", fetch= FetchType.EAGER)
+    Set<GamePlayer> gamePlayer;
 
     public Player() {}
 
