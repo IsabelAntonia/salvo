@@ -14,20 +14,36 @@ import static java.util.stream.Collectors.toList;
 @RestController
 @RequestMapping("/api")
 public class SalvoController {
+/*
+    @Autowired
+    private GameRepository gameRepository;*/
 
     @Autowired
-    private GameRepository gameRepository;
-
+    private GamePlayerRepository gamePlayerRepository;
 
     @RequestMapping("/games")
-    public List<Object> getGames() {
-        return gameRepository.findAll().stream().map(game->gameMap(game)).collect(toList());
+    public List <Object> getGamePlayers(){
+        return gamePlayerRepository.findAll().stream().map(gamePlayer -> getGamePlayers(gamePlayer)).collect(toList());
     }
 
-    private Map<String, Object> gameMap(Game game) {
+/*    public List<Object> getGames() {
+        return gameRepository.findAll().stream().map(game->gameMap(game)).collect(toList());
+    }*/
+
+    private Map<String, Object> getGamePlayers(GamePlayer gamePlayer) {
         Map<String, Object> gamemap = new LinkedHashMap<String, Object>();
-        gamemap.put("id", game.getId());
-        gamemap.put("creationDate", game.getDate());
+        Map<String, Object> gamePlayerMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> playerMap = new LinkedHashMap<String, Object>();
+
+        playerMap.put("playerId", gamePlayer.getPlayer().getId());
+        playerMap.put("email", gamePlayer.getPlayer().getEmail());
+        gamePlayerMap.put("GamePlayerId", gamePlayer.getId());
+        gamePlayerMap.put("player", playerMap);
+        gamemap.put("GameId", gamePlayer.getGame().getId());
+        gamemap.put("creationDate", gamePlayer.getDate());
+        gamemap.put("gamePlayers", gamePlayerMap);
+
+
 
         return gamemap;
     }

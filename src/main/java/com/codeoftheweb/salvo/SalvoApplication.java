@@ -42,8 +42,10 @@ public class SalvoApplication {
 
 
 			GamePlayer gamePlayer1 = new GamePlayer(game1, player1);
+			GamePlayer gamePlayer2 = new GamePlayer(game3, player2);
 
 			gamePlayerRepository.save(gamePlayer1);
+			gamePlayerRepository.save(gamePlayer2);
 		};
 	}
 
