@@ -2,11 +2,13 @@ package com.codeoftheweb.salvo;
 import javax.persistence.*;
 import javax.persistence.GenerationType;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Game {
 
+    @CreationTimestamp
     private Date date;
 
     @Id
@@ -14,12 +16,10 @@ public class Game {
     private long id;
 
 
-    @OneToMany(mappedBy="player", fetch= FetchType.EAGER)
-    List<GamePlayer> gamePlayer;
+    @OneToMany(mappedBy="game", fetch= FetchType.EAGER)
+    Set<GamePlayer> gamePlayer;
 
-    public Game() {
-        this.date = new Date();
-    }
+    public Game() { }
 
     public Date getDate() {
         return date;
