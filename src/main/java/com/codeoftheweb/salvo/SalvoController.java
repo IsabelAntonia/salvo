@@ -14,9 +14,7 @@ import static java.util.stream.Collectors.toList;
 @RestController
 @RequestMapping("/api")
 public class SalvoController {
-/*
-    @Autowired
-    private GameRepository gameRepository;*/
+
 
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
@@ -26,9 +24,6 @@ public class SalvoController {
         return gamePlayerRepository.findAll().stream().map(gamePlayer -> getGamePlayers(gamePlayer)).collect(toList());
     }
 
-/*    public List<Object> getGames() {
-        return gameRepository.findAll().stream().map(game->gameMap(game)).collect(toList());
-    }*/
 
     private Map<String, Object> getGamePlayers(GamePlayer gamePlayer) {
         Map<String, Object> gamemap = new LinkedHashMap<String, Object>();
