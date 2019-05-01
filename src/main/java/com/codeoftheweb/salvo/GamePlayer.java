@@ -2,10 +2,10 @@ package com.codeoftheweb.salvo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.util.Date;
-
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -23,6 +23,10 @@ public class GamePlayer {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game_id")
     private Game game;
+
+    @OneToMany(mappedBy = "gamePlayer" ,fetch = FetchType.EAGER)
+    Set<Ship> ships = new HashSet<>();
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,5 +78,10 @@ public class GamePlayer {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void addShip(Ship ship) {
+        ship.setGamePlayer(this);
+        ships.add(ship);
     }
 }
