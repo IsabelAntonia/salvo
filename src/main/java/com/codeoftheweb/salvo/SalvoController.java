@@ -1,9 +1,11 @@
 package com.codeoftheweb.salvo;
 
+import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +21,40 @@ public class SalvoController {
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
 
-    @RequestMapping("/games")
-    public List <Object> getGamePlayers(){
-        return gamePlayerRepository.findAll().stream().map(gamePlayer -> getGamePlayers(gamePlayer)).collect(toList());
+
+
+    // some player want to see this info e.g player 50 for a specific game he is playing
+    // we want to return the correct data for him so that JS on the frontend can easily present it
+    // see information for one specific game from one specific players point of view by gameplayer
+    // more specifically see the name of this player and his id , the name of his opponent and his id, what kind of ships he (this player) has placed, also where those ships are
+
+
+
+
+ /*   @RequestMapping("/game_view/{id}")
+    public Map<String, Object> getGameInfo(@PathVariable long id) {
+        return gamePlayerMapInfo(gamePlayerRepository.findById(id));
+    }*/
+
+    @RequestMapping("/game_view/{nn}")
+    public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
+        Map<String, Object> gameMapInfo = new LinkedHashMap<>();
+        GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
+        gameMapInfo.put("id", nn);
+
+        return gameMapInfo;
     }
 
 
-    private Map<String, Object> getGamePlayers(GamePlayer gamePlayer) {
+
+    @RequestMapping("/games") // see all games and the related information
+    // this method is called when someone requests /games
+    public List <Object> getGamePlayers(){
+        return gamePlayerRepository.findAll().stream().map(gamePlayer -> getGamePlayer(gamePlayer)).collect(toList());
+    }
+
+
+    private Map<String, Object> getGamePlayer(GamePlayer gamePlayer) {
         Map<String, Object> gamemap = new LinkedHashMap<String, Object>();
         Map<String, Object> gamePlayerMap = new LinkedHashMap<String, Object>();
         Map<String, Object> playerMap = new LinkedHashMap<String, Object>();
@@ -42,4 +71,7 @@ public class SalvoController {
 
         return gamemap;
     }
+
+
+
 }
