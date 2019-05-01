@@ -5,11 +5,34 @@
     <title>Salvo!</title>
 </head>
 <body>
-<ol id="putHere">
+<div id="app">
 
-</ol>
+    <div v-for="element in data">
 
-<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-<script src="games.js"></script>
+    <ul>
+
+        <li>GameId: {{element.GameId}}</li>
+        <li>creationDate: {{element.creationDate}}</li>
+        <ul>gamePlayers:
+
+            <li>GamePlayerId: {{element.gamePlayers.GamePlayerId}}</li>
+            <ul>players:
+
+                <li>playerId: {{element.gamePlayers.player.playerId}}</li>
+                <li>Email: {{element.gamePlayers.player.email}}</li>
+
+            </ul>
+
+        </ul>
+
+    </ul>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="game.js"></script>
 </body>
 </html>
