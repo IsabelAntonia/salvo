@@ -40,12 +40,12 @@ public class GamePlayer {
         this.date = new Date();
     }
 
-    public Player getGames() {
-        return this.player;
+    public Game getGames() {
+        return this.game;
     }
 
-    public Game getPlayers() {
-        return this.game;
+    public Player getPlayers() {
+        return this.player;
     }
 
     public Date getDate() {
