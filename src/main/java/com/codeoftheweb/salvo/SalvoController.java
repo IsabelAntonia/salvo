@@ -35,23 +35,11 @@ public class SalvoController {
     @RequestMapping("/game_view/{nn}")
     public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
         Map<String, Object> gameMapSet = new LinkedHashMap<>();
-        Map<String, Object> createdGamePlayerSet = new LinkedHashMap<>();
-        Map<String, Object> createdPlayerSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
-        /*gameMapSet.put("GameId", gamePlayerId.getGame().getId());
-        gameMapSet.put("creationDate", gamePlayerId.getDate());*/
-
-
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
-
-
-
+        gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
         return gameMapSet;
     }
-
-
-
-
 
     @RequestMapping("/games") // see all games and the related information
     // this method is called when someone requests /games
@@ -59,10 +47,21 @@ public class SalvoController {
         return gameRepository.findAll().stream().map(game->createGameMap(game)).collect(toList());
     }
 
+    private List<Map<String, Object>> createShipMap (Set<Ship> ships) {
+        return ships.stream().map(ship-> createShipMaps(ship)).collect(toList());
+    }
+
     private List<Map<String, Object>> createGamePlayerMap (Set<GamePlayer> gamePlayer) {
         return gamePlayer.stream().map(gameplayer-> createGamePlayerMaps(gameplayer)).collect(toList());
     }
 
+    private Map<String, Object> createShipMaps(Ship ship) {
+        Map<String, Object> shipMap = new LinkedHashMap<String, Object>();
+        shipMap.put("type", ship.getType());
+        shipMap.put("location", ship.getLocation());
+        return shipMap;
+
+    }
 
     private Map<String, Object> createGameMap(Game game) {
         Map<String, Object> gamemap = new LinkedHashMap<String, Object>();

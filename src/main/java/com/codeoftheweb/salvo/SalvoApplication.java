@@ -63,7 +63,7 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gamePlayer1);
 			gamePlayerRepository.save(gamePlayer2);
 
-            gamePlayer1.addShip(ship1);
+            gamePlayer1.addShip(ship1); // Michelle placed three ships carrier, battleship and destroyer
             gamePlayer1.addShip(ship2);
             gamePlayer1.addShip(ship3);
 
