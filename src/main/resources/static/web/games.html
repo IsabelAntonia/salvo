@@ -5,31 +5,19 @@
     <title>Salvo!</title>
 </head>
 <body>
-<div id="app">
 
-    <div v-for="element in data">
 
-    <ul>
-
-        <li>GameId: {{element.GameId}}</li>
-        <li>creationDate: {{element.creationDate}}</li>
-<!--        <ul>gamePlayers:
-
-            <li>GamePlayerId: {{element.gamePlayers.GamePlayerId}}</li>
-            <ul>players:
-
-                <li>playerId: {{element.gamePlayers.player.playerId}}</li>
-                <li>Email: {{element.gamePlayers.player.email}}</li>
-
-            </ul>
-
-        </ul>-->
-
-    </ul>
-
+    <div id="app">
+        <div v-for="game in data">
+            <ol>
+                <li>{{game.GameId}}</li>
+                <li>{{game.creationDate}}</li>
+                <li>{{game.gamePlayers}}</li>
+            </ol>
+        </div>
     </div>
 
-</div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>

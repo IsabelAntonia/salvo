@@ -46,6 +46,8 @@ public class SalvoApplication {
 
 			GamePlayer gamePlayer1 = new GamePlayer(game3, player5); //Michelle
 			GamePlayer gamePlayer2 = new GamePlayer(game3, player2);
+			GamePlayer gamePlayer3 = new GamePlayer(game2, player1);
+			GamePlayer gamePlayer4 = new GamePlayer(game1, player5);
 
 			List<String> loc1 = Arrays.asList("E3","E4","E5","E7","E8");
 			List<String> loc2 = Arrays.asList("A5","B5","C5","D5");
@@ -62,6 +64,8 @@ public class SalvoApplication {
 
 			gamePlayerRepository.save(gamePlayer1);
 			gamePlayerRepository.save(gamePlayer2);
+			gamePlayerRepository.save(gamePlayer3);
+			gamePlayerRepository.save(gamePlayer4);
 
             gamePlayer1.addShip(ship1); // Michelle placed three ships carrier, battleship and destroyer
             gamePlayer1.addShip(ship2);

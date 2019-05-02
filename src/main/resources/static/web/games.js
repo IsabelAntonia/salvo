@@ -4,7 +4,8 @@ el: '#app',
 
 data: {
 
-data: null
+data: null,
+gamePlayers: []
 },
 
 beforeCreate(){
@@ -14,6 +15,7 @@ fetch('../api/games')
 .then(response => {
 
 this.data = response;
+response.gamePlayers = this.gamePlayers;
 console.log(this.data)
 
 });
