@@ -37,6 +37,7 @@ public class SalvoController {
         Map<String, Object> gameMapSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
+        gameMapSet.put("thisPlayer", gamePlayerId.getPlayer());
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
         return gameMapSet;
     }
