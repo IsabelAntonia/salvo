@@ -32,18 +32,25 @@ public class SalvoController {
     // more specifically see the name of this player and his id , the name of his opponent and his id, what kind of ships he (this player) has placed, also where those ships are
 
 
-/*
     @RequestMapping("/game_view/{nn}")
     public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
-        Map<String, Object> gameMapInfo = new LinkedHashMap<>();
+        Map<String, Object> gameMapSet = new LinkedHashMap<>();
+        Map<String, Object> createdGamePlayerSet = new LinkedHashMap<>();
+        Map<String, Object> createdPlayerSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
-        gameMapInfo.put("gamePlayerId", nn);
-        gameMapInfo.put("thisPlayerId", gamePlayerId.getPlayer().getId());
-        gameMapInfo.put("thisPlayerEmail", gamePlayerId.getPlayer().getEmail());
-        gameMapInfo.put("opponentId", gamePlayerId.getPlayer().getId());
+        gameMapSet.put("GameId", gamePlayerId.getGame().getId());
+        gameMapSet.put("creationDate", gamePlayerId.getDate());
+        gameMapSet.put("gamePlayers", createdGamePlayerSet);
+        createdGamePlayerSet.put("GamePlayerId", gamePlayerId.getId()); // same as nn
+        createdGamePlayerSet.put("players", createdPlayerSet);
+        createdPlayerSet.put("playerId", gamePlayerId.getPlayer().getId()); // gives me id of this player
+        createdPlayerSet.put("playerEmail", gamePlayerId.getPlayer().getEmail()); // gives me id of this Email
 
-        return gameMapInfo;
-    }*/
+
+        return gameMapSet;
+    }
+
+
 
 
 
