@@ -44,7 +44,7 @@ public class SalvoApplication {
 			gameRepository.save(game3);
 
 
-			GamePlayer gamePlayer1 = new GamePlayer(game1, player1);
+			GamePlayer gamePlayer1 = new GamePlayer(game3, player5);
 			GamePlayer gamePlayer2 = new GamePlayer(game3, player2);
 
 			List<String> loc1 = Arrays.asList("E3","E4","E5","E7","E8");

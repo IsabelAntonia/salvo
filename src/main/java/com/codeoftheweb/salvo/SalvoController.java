@@ -1,11 +1,10 @@
 package com.codeoftheweb.salvo;
 
-import org.hibernate.criterion.Example;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,19 +30,20 @@ public class SalvoController {
 
 
 
- /*   @RequestMapping("/game_view/{id}")
-    public Map<String, Object> getGameInfo(@PathVariable long id) {
-        return gamePlayerMapInfo(gamePlayerRepository.findById(id));
-    }*/
-
     @RequestMapping("/game_view/{nn}")
+    public Map<String, Object> getGameInfo(@PathVariable long nn) {
+        return gamePlayerMapInfo(gamePlayerRepository.findById(nn).get());
+    }
+
+/*    @RequestMapping("/game_view/{nn}")
     public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
         Map<String, Object> gameMapInfo = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
-        gameMapInfo.put("id", nn);
+        gameMapInfo.put("GamePlayerId", nn);
+        gameMapInfo.put("ThisPlayerId", gamePlayerId.getPlayer().getId());
 
         return gameMapInfo;
-    }
+    }*/
 
 
 
@@ -70,6 +70,12 @@ public class SalvoController {
 
 
         return gamemap;
+    }
+
+    private Map<String, Object> gamePlayerMapInfo (GamePlayer gamePlayer){
+        Map<String, Object> gameMapInfo = new LinkedHashMap<>();
+        gameMapInfo.put("ThisPlayerId", gamePlayer.getPlayer().getId());
+        return gameMapInfo;
     }
 
 
