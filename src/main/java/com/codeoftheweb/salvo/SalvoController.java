@@ -38,13 +38,12 @@ public class SalvoController {
         Map<String, Object> createdGamePlayerSet = new LinkedHashMap<>();
         Map<String, Object> createdPlayerSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
-        gameMapSet.put("GameId", gamePlayerId.getGame().getId());
-        gameMapSet.put("creationDate", gamePlayerId.getDate());
-        gameMapSet.put("gamePlayers", createdGamePlayerSet);
-        createdGamePlayerSet.put("GamePlayerId", gamePlayerId.getId()); // same as nn
-        createdGamePlayerSet.put("players", createdPlayerSet);
-        createdPlayerSet.put("playerId", gamePlayerId.getPlayer().getId()); // gives me id of this player
-        createdPlayerSet.put("playerEmail", gamePlayerId.getPlayer().getEmail()); // gives me id of this Email
+        /*gameMapSet.put("GameId", gamePlayerId.getGame().getId());
+        gameMapSet.put("creationDate", gamePlayerId.getDate());*/
+
+
+        gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
+
 
 
         return gameMapSet;
@@ -67,7 +66,7 @@ public class SalvoController {
 
     private Map<String, Object> createGameMap(Game game) {
         Map<String, Object> gamemap = new LinkedHashMap<String, Object>();
-        gamemap.put("GameId", game.getId()); // i an get the Game id
+        gamemap.put("GameId", game.getId()); // i can get the Game id
         gamemap.put("creationDate", game.getDate()); // i can get the Date
         gamemap.put("gamePlayers", createGamePlayerMap(game.gamePlayer)); // i can get the gamePlayers
         return gamemap;
