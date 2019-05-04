@@ -6,7 +6,8 @@
         opponent: ' ',
         thisPlayer: ' ',
         thisPlayerId: 0,
-        thisPlayers: []
+        thisPlayers: [],
+        allLocations: []
     },
     beforeCreate() {
         let url = new URLSearchParams(window.location.search);
@@ -20,7 +21,7 @@
                 this.players = this.data.Info.gamePlayers;
 this.findOpponent();
 this.displayGrid();
-this.displayShips(data);
+this.displayShips(this.data);
                 console.log(this.data);
 
 
@@ -36,6 +37,27 @@ this.displayShips(data);
     if (this.thisPlayerId !== this.players[i].player.playerId){
    this.opponent = this.players[i].player.playerEmail; }
     }
+
+ },
+
+ displayShips(data){
+
+ for (var i = 0; i < data.Ships.length; i++){
+
+ this.allLocations.push(data.Ships[i].location);
+
+ }
+this.allLocations = this.allLocations.flat();
+
+for (let j = 0; j < this.allLocations.length; j++){
+
+occupiedCell = document.getElementById(this.allLocations[j])
+occupiedCell.style.backgroundColor = 'blue';
+
+}
+
+
+ // get all locations from all ships
 
  },
 
