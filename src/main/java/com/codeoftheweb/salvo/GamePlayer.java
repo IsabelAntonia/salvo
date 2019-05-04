@@ -27,6 +27,8 @@ public class GamePlayer {
     @OneToMany(mappedBy = "gamePlayer" ,fetch = FetchType.EAGER)
     Set<Ship> ships = new HashSet<>();
 
+    @OneToMany(mappedBy = "gamePlayer" ,fetch = FetchType.EAGER)
+    Set<Salvo> salvos = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
