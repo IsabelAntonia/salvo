@@ -19,7 +19,7 @@ public class SalvoApplication {
 	@Bean //  tells Spring 'here is an instance of this class, please keep hold of it and give it back to me when I ask'.
 	// Spring knows that the initData() method in the CommandLineRunner will need an instance of PlayerRepo.
 	// Spring will inject an instance of PlayerRepository for this parameter
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository) {
+	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository) {
 		return (args) -> {
 
 			Player player1 = new Player("Jack", "jack@gmail.com");
@@ -55,11 +55,15 @@ public class SalvoApplication {
 			List<String> loc4 = Arrays.asList("I5","I6","I7");
 			List<String> loc5 = Arrays.asList("F5","G5");
 
+			List<String> salvoLoc1 = Arrays.asList("C3","G5");
+
 			Ship ship1 = new Ship("carrier", loc1);
 			Ship ship2 = new Ship("battleship", loc2);
 			Ship ship3 = new Ship("destroyer", loc3);
 			Ship ship4 = new Ship("Submarine", loc4);
 			Ship ship5 = new Ship("portalBoat", loc5);
+
+			Salvo salvo1 = new Salvo(salvoLoc1);
 
 
 			gamePlayerRepository.save(gamePlayer1);
@@ -71,12 +75,16 @@ public class SalvoApplication {
             gamePlayer1.addShip(ship2);
             gamePlayer1.addShip(ship3);
 
+            gamePlayer1.addSalvo(salvo1);
+
 
 			shipRepository.save(ship1);
 			shipRepository.save(ship2);
 			shipRepository.save(ship3);
 			shipRepository.save(ship4);
 			shipRepository.save(ship5);
+
+			salvoRepository.save(salvo1);
 		};
 	}
 

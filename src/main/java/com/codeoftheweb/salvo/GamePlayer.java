@@ -28,7 +28,7 @@ public class GamePlayer {
     Set<Ship> ships = new HashSet<>();
 
     @OneToMany(mappedBy = "gamePlayer" ,fetch = FetchType.EAGER)
-    Set<Salvo> salvos = new HashSet<>();
+    Set<Salvo> salvoes = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,15 +39,42 @@ public class GamePlayer {
     public GamePlayer(Game game, Player player) {
         this.game = game;
         this.player = player;
-        this.date = new Date();
+
     }
 
-    public Game getGames() {
-        return this.game;
+    public void addShip(Ship ship) {
+        ship.setGamePlayer(this);
+        this.ships.add(ship);
     }
 
-    public Player getPlayers() {
+    public void addSalvo(Salvo salvo) {
+        salvo.setGamePlayer(this);
+        this.salvoes.add(salvo);
+        salvo.nextTurn();
+    }
+
+    public Set<Salvo> getSalvo() {
+        return salvoes;
+    }
+
+    public void setSalvo(Set<Salvo> salvo) {
+        this.salvoes = salvo;
+    }
+
+    public Set<Ship> getShips() {
+        return ships;
+    }
+
+    public void setShips(Set<Ship> ship) {
+        this.ships = ship;
+    }
+
+    public Player getGames() {
         return this.player;
+    }
+
+    public Game getPlayers() {
+        return this.game;
     }
 
     public Date getDate() {
@@ -82,16 +109,4 @@ public class GamePlayer {
         this.id = id;
     }
 
-    public void addShip(Ship ship) {
-        ship.setGamePlayer(this);
-        this.ships.add(ship);
-    }
-
-    public Set<Ship> getShips() {
-        return ships;
-    }
-
-    public void setShip(Set<Ship> ship) {
-        this.ships = ship;
-    }
 }

@@ -16,7 +16,7 @@ public class Salvo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long turn;
+    private int turn;
 
     @ElementCollection
     @Column(name = "location")
@@ -29,11 +29,46 @@ public class Salvo {
 
     public Salvo(){}
 
-
-    public Salvo(List<String> location, long turn){
-
+    public Salvo(List<String> location) {
+        this.turn = 0;
         this.location = location;
+        this.gamePlayer = getGamePlayer();
+    }
+
+    public int nextTurn() {
+        return turn++;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public void setTurn(int turn) {
         this.turn = turn;
+    }
+
+    public List<String> getLocation() {
+        return location;
+    }
+
+    public void setLocation(List<String> location) {
+        this.location = location;
+    }
+
+    public GamePlayer getGamePlayer() {
+        return gamePlayer;
+    }
+
+    public void setGamePlayer(GamePlayer gamePlayer) {
+        this.gamePlayer = gamePlayer;
     }
 
 
