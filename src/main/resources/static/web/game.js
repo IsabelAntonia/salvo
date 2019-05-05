@@ -1,4 +1,3 @@
-
     var app = new Vue({
     el: '#vueApp',
     data: {
@@ -64,40 +63,59 @@ occupiedCell.style.backgroundColor = 'blue';
 
         displayGrid() {
 
-            let table = document.getElementById("gridTable");
-            let tHead = document.createElement("thead");
-            let tBody = document.createElement("tbody");
+            var table = document.getElementById("table");
+            var tableSalvo = document.getElementById("tableSalvo");
 
-            let numbers = [" ", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-            let letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", ""]
-            for (let i = 0; i < 121; i++) {
+            var tHead = document.createElement("thead");
+            var tHeadSalvo = document.createElement("thead");
+
+            var tBody = document.createElement("tbody");
+            var tBodySalvo = document.createElement("tbody");
+
+            var numbers = [" ", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", ""]
+            for (var i = 0; i < 121; i++) {
 
                 if (i <= 10) {
-                    let singleCell = document.createElement('td');
+                    var singleCell = document.createElement('td');
+                    var singleCellSalvo = document.createElement('td');
+
                     singleCell.innerHTML = numbers[i];
+                    singleCellSalvo.innerHTML = numbers[i];
+
                     tHead.append(singleCell);
+                    tHeadSalvo.append(singleCellSalvo);
                 } else {
 
                     if (i % 11 === 0) {
 
                         var row = document.createElement('tr');
+                        var rowSalvo = document.createElement('tr');
                         for (let i = 0; i < letters.length; i++) {
                             row.insertCell().innerHTML = ' ';
+                            rowSalvo.insertCell().innerHTML = ' ';
                         }
                     }
                     tBody.append(row);
+                    tBodySalvo.append(rowSalvo);
                 }
             }
             table.append(tHead, tBody);
+            tableSalvo.append(tHeadSalvo, tBodySalvo);
 
             for (var j = 0; j < 10; j++) {
+
                 table.rows.item(j).childNodes[0].innerHTML = letters[j]
+                tableSalvo.rows.item(j).childNodes[0].innerHTML = letters[j]
             }
 
             for (var j = 0; j <= 9; j++) {
                 for (var i = 1; i <= 10; i++){
                 table.rows.item(j).childNodes[i].id = table.rows.item(j).childNodes[0].innerHTML + numbers[i]
+                tableSalvo.rows.item(j).childNodes[i].id = tableSalvo.rows.item(j).childNodes[0].innerHTML + numbers[i]
+
                 table.rows.item(j).childNodes[i].innerHTML = table.rows.item(j).childNodes[i].id;
+                tableSalvo.rows.item(j).childNodes[i].innerHTML = tableSalvo.rows.item(j).childNodes[i].id;
                 }
 
             }

@@ -66,9 +66,9 @@ public class SalvoApplication {
 			Ship ship4 = new Ship("Submarine", loc4);
 			Ship ship5 = new Ship("portalBoat", loc5);
 
-			Salvo salvo1 = new Salvo(salvoLoc1);
-			Salvo salvo2 = new Salvo(salvoLoc2);
-			Salvo salvo3 = new Salvo(salvoLoc3);
+			Salvo salvo1 = new Salvo(1, salvoLoc1);
+			Salvo salvo2 = new Salvo(2, salvoLoc2);
+			Salvo salvo3 = new Salvo(1, salvoLoc3);
 
 
 			gamePlayerRepository.save(gamePlayer1);

@@ -26,12 +26,6 @@ public class SalvoController {
 
 
 
-    // some player want to see this info e.g player 50 for a specific game he is playing
-    // we want to return the correct data for him so that JS on the frontend can easily present it
-    // see information for one specific game from one specific players point of view by gameplayer
-    // more specifically see the name of this player and his id , the name of his opponent and his id, what kind of ships he (this player) has placed, also where those ships are
-
-
     @RequestMapping("/game_view/{nn}")
     public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
         Map<String, Object> gameMapSet = new LinkedHashMap<>();
@@ -82,13 +76,6 @@ public class SalvoController {
         return createdTurnMap;
 
     }
-/*
-    private Map<String, Object> createSalvoMap(Game game) { // salvos
-        Map<String, Object> salvoMap = new LinkedHashMap<String, Object>();
-        salvoMap.put("Salvoes in Players", createSalvoMaps(game.gamePlayer));
-        return salvoMap;
-
-    }*/
 
     private Map<String, Object> createGameMap(Game game) {
         Map<String, Object> gamemap = new LinkedHashMap<String, Object>();
@@ -119,14 +106,6 @@ public class SalvoController {
         createdPlayerMap.put("playerEmail", player.getEmail());
         return createdPlayerMap;
     }
-
-
-
-
-
-
-
-
 
 
 }
