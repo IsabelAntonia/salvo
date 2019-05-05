@@ -6,10 +6,13 @@
                 thisPlayer: ' ',
                 thisGamePlayerId: 0,
                 thisPlayerId: 0,
+                opponentId: 0,
                 thisPlayers: [],
                 allLocations: [],
                 thisPlayerSalvoes: {},
-                allSalvoPlayerLocations: []
+                allSalvoPlayerLocations: [],
+                allSalvoOpponentLocations: [],
+                opponentSalvoes: {}
             },
             beforeCreate() {
                 let url = new URLSearchParams(window.location.search);
@@ -21,9 +24,7 @@
                         this.thisPlayer = this.data.thisPlayer.playerEmail;
                         this.thisPlayerId = this.data.thisPlayer.playerId;
                         this.players = this.data.Info.gamePlayers;
-                        //                this.thisGamePlayerId = this.data.thisPlayer.
                         this.findOpponent();
-
                         this.displayGrid();
                         this.displayShips(this.data);
                         this.identifySalvoes(this.data)
@@ -39,6 +40,7 @@
                     for (var i = 0; i < this.players.length; i++) {
                         if (this.thisPlayerId !== this.players[i].player.playerId) {
                             this.opponent = this.players[i].player.playerEmail;
+                            this.opponentId = this.players[i].player.playerId;
                         }
                     }
 
@@ -63,20 +65,43 @@
                         if (data.thisPlayer.gamePlayerId == Object.keys(data.Salvoes[i])) {
                             this.thisPlayerSalvoes = data.Salvoes[i];
                         }
+
+                        else {
+                        this.opponentSalvoes = data.Salvoes[i];
+                        }
                     }
                     this.displayPlayerSalvoes(this.thisPlayerSalvoes);
+                    this.showHits(this.opponentSalvoes);
+
+
+                },
+
+                showHits(salvoes){
+
+                 let myObj = salvoes[this.opponentId];
+                                    for (var i = 0; i < myObj.length; i++) {
+                                        this.allSalvoOpponentLocations.push(myObj[i].Locations);
+                                    }
+                                    this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
+
+                                    for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
+
+                                    hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
+                                    hitCell.style.backgroundColor = 'black';
+                                   }
+
 
 
                 },
 
                 displayPlayerSalvoes(salvoes) {
-                    console.log(salvoes[this.data.thisPlayer.gamePlayerId]);
+
                     let myObj = salvoes[this.data.thisPlayer.gamePlayerId];
                     for (var i = 0; i < myObj.length; i++) {
                         this.allSalvoPlayerLocations.push(myObj[i].Locations);
                     }
                     this.allSalvoPlayerLocations = this.allSalvoPlayerLocations.flat();
-                    console.log(this.allSalvoPlayerLocations);
+
                     for (let j = 0; j < this.allSalvoPlayerLocations.length; j++) {
                     var className = this.allSalvoPlayerLocations[j];
                     shotCell = document.getElementsByClassName(className)[0];
