@@ -56,7 +56,7 @@ public class SalvoApplication {
 			List<String> loc5 = Arrays.asList("F5","G5");
 
 			List<String> salvoLoc1 = Arrays.asList("C3","G5");
-			List<String> salvoLoc2 = Arrays.asList("AD", "H10");
+			List<String> salvoLoc2 = Arrays.asList("A4", "H10");
 			List<String> salvoLoc3 = Arrays.asList("J5", "C8");
 
 
