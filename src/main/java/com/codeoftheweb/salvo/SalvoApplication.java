@@ -56,6 +56,9 @@ public class SalvoApplication {
 			List<String> loc5 = Arrays.asList("F5","G5");
 
 			List<String> salvoLoc1 = Arrays.asList("C3","G5");
+			List<String> salvoLoc2 = Arrays.asList("AD", "H10");
+			List<String> salvoLoc3 = Arrays.asList("J5", "C8");
+
 
 			Ship ship1 = new Ship("carrier", loc1);
 			Ship ship2 = new Ship("battleship", loc2);
@@ -64,6 +67,8 @@ public class SalvoApplication {
 			Ship ship5 = new Ship("portalBoat", loc5);
 
 			Salvo salvo1 = new Salvo(salvoLoc1);
+			Salvo salvo2 = new Salvo(salvoLoc2);
+			Salvo salvo3 = new Salvo(salvoLoc3);
 
 
 			gamePlayerRepository.save(gamePlayer1);
@@ -76,6 +81,8 @@ public class SalvoApplication {
             gamePlayer1.addShip(ship3);
 
             gamePlayer1.addSalvo(salvo1);
+            gamePlayer1.addSalvo(salvo2);
+            gamePlayer2.addSalvo(salvo3);
 
 
 			shipRepository.save(ship1);
@@ -85,6 +92,8 @@ public class SalvoApplication {
 			shipRepository.save(ship5);
 
 			salvoRepository.save(salvo1);
+			salvoRepository.save(salvo2);
+			salvoRepository.save(salvo3);
 		};
 	}
 

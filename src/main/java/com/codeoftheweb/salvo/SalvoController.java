@@ -39,6 +39,8 @@ public class SalvoController {
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
         gameMapSet.put("thisPlayer", gamePlayerId.getPlayer());
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
+//        gameMapSet.put("Salvoes", createSalvoMap(gamePlayerId.getGame())); // salvo
+        gameMapSet.put("Salvoes", createSalvoMaps(gamePlayerId.getGame().gamePlayer)); // salvo
         return gameMapSet;
     }
 
@@ -52,8 +54,17 @@ public class SalvoController {
         return ships.stream().map(ship-> createShipMaps(ship)).collect(toList());
     }
 
+
     private List<Map<String, Object>> createGamePlayerMap (Set<GamePlayer> gamePlayer) {
         return gamePlayer.stream().map(gameplayer-> createGamePlayerMaps(gameplayer)).collect(toList());
+    }
+
+    private List<Map<String, Object>> createSalvoMaps (Set<GamePlayer> gamePlayer) { // salvos
+        return gamePlayer.stream().map(gameplayer-> createFinalSalvoMap(gameplayer)).collect(toList());
+    }
+
+    private List<Map<String, Object>> createTurnMap (Set<Salvo> salvoes) { // salvos
+        return salvoes.stream().map(salvo-> createTurnMaps(salvo)).collect(toList());
     }
 
     private Map<String, Object> createShipMaps(Ship ship) {
@@ -63,6 +74,21 @@ public class SalvoController {
         return shipMap;
 
     }
+
+    private Map<String, Object> createTurnMaps(Salvo salvo) { // salvo
+        Map<String, Object> createdTurnMap = new LinkedHashMap<String, Object>();
+        createdTurnMap.put("turn", salvo.getTurn());
+        createdTurnMap.put("Locations", salvo.getLocation());
+        return createdTurnMap;
+
+    }
+/*
+    private Map<String, Object> createSalvoMap(Game game) { // salvos
+        Map<String, Object> salvoMap = new LinkedHashMap<String, Object>();
+        salvoMap.put("Salvoes in Players", createSalvoMaps(game.gamePlayer));
+        return salvoMap;
+
+    }*/
 
     private Map<String, Object> createGameMap(Game game) {
         Map<String, Object> gamemap = new LinkedHashMap<String, Object>();
@@ -79,12 +105,22 @@ public class SalvoController {
         return createdGamePlayerMap;
     }
 
+
+    private Map<String, Object> createFinalSalvoMap(GamePlayer gamePlayer) { // salvo
+        Map<String, Object> createdSalvoMap = new LinkedHashMap<String, Object>();
+        createdSalvoMap.put("gamePlayerId", gamePlayer.getId());
+        createdSalvoMap.put("Salvoes", createTurnMap(gamePlayer.getSalvo()));
+        return createdSalvoMap;
+    }
+
     private Map<String, Object> createPlayerMap(Player player) {
         Map<String, Object> createdPlayerMap = new LinkedHashMap<String, Object>();
         createdPlayerMap.put("playerId", player.getId()); // i get the PlayerId should have two of these
         createdPlayerMap.put("playerEmail", player.getEmail());
         return createdPlayerMap;
     }
+
+
 
 
 

@@ -69,11 +69,11 @@ public class GamePlayer {
         this.ships = ship;
     }
 
-    public Player getGames() {
+    public Player getPlayers() {
         return this.player;
     }
 
-    public Game getPlayers() {
+    public Game getGames() {
         return this.game;
     }
 
