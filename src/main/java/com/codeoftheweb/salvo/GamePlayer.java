@@ -110,4 +110,7 @@ public class GamePlayer {
         this.id = id;
     }
 
+    public String getGamePlayerIdString() {
+        return Long.toString(getId());}
+
 }

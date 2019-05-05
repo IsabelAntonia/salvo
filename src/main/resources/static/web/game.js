@@ -4,9 +4,11 @@
         data: [],
         opponent: ' ',
         thisPlayer: ' ',
+        thisGamePlayerId: 0,
         thisPlayerId: 0,
         thisPlayers: [],
-        allLocations: []
+        allLocations: [],
+        thisPlayerSalvoes: {}
     },
     beforeCreate() {
         let url = new URLSearchParams(window.location.search);
@@ -15,12 +17,15 @@
             .then(response => response.json())
             .then(json => {
                 this.data = json;
-                this.thisPlayer = this.data.thisPlayer.email;
-                this.thisPlayerId = this.data.thisPlayer.id;
+                this.thisPlayer = this.data.thisPlayer.playerEmail;
+                this.thisPlayerId = this.data.thisPlayer.playerId;
                 this.players = this.data.Info.gamePlayers;
+//                this.thisGamePlayerId = this.data.thisPlayer.
 this.findOpponent();
+
 this.displayGrid();
 this.displayShips(this.data);
+this.displaySalvoes(this.data);
                 console.log(this.data);
 
 
@@ -52,11 +57,24 @@ for (let j = 0; j < this.allLocations.length; j++){
 
 occupiedCell = document.getElementById(this.allLocations[j])
 occupiedCell.style.backgroundColor = 'blue';
+}
+},
+
+displaySalvoes(data){
+
+for (var i = 0; i < data.Salvoes.length; i++){
+
+if (data.thisPlayer.gamePlayerId == Object.keys(data.Salvoes[i])){
+
+this.thisPlayerSalvoes = data.Salvoes[i];
+
 
 }
 
+}
 
- // get all locations from all ships
+console.log(this.thisPlayerSalvoes);
+
 
  },
 
