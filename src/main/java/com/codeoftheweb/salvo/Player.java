@@ -26,6 +26,15 @@ public class Player {
         this.email = email;
     }
 
+    public Score getSingleScore(Game game) { // i know this player
+        for (Score score: score) { // check all the scores he got
+            if (score.getGame() == game) { // if the score is from this game
+                return score; // return it
+            }
+        }
+        return null;
+    }
+
     public String getUserName() {
         return userName;
     }

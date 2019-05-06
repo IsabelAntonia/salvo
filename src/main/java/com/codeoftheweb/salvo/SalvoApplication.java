@@ -45,9 +45,11 @@ public class SalvoApplication {
 
 
 			GamePlayer gamePlayer1 = new GamePlayer(game3, player5); //Michelle
-			GamePlayer gamePlayer2 = new GamePlayer(game3, player2);
-			GamePlayer gamePlayer3 = new GamePlayer(game2, player1);
-			GamePlayer gamePlayer4 = new GamePlayer(game1, player5);
+			GamePlayer gamePlayer2 = new GamePlayer(game3, player2); // Chloe
+			GamePlayer gamePlayer3 = new GamePlayer(game2, player1); // Jack
+			GamePlayer gamePlayer4 = new GamePlayer(game1, player5); //Michelle
+			GamePlayer gamePlayer5 = new GamePlayer(game1, player3); // Kim
+			GamePlayer gamePlayer6 = new GamePlayer(game2, player4); // David
 
 			List<String> loc1 = Arrays.asList("E3","E4","E5","E7","E8");
 			List<String> loc2 = Arrays.asList("A5","B5","C5","D5");
@@ -70,16 +72,25 @@ public class SalvoApplication {
 			Salvo salvo2 = new Salvo(2, salvoLoc2);
 			Salvo salvo3 = new Salvo(1, salvoLoc3);
 
-			Score score1 = new Score(1, game1, player1);
-			Score score2 = new Score(0, game2, player2);
-			Score score3 = new Score(0.5, game3, player1);
-			Score score4 = new Score(0.5, game3, player2);
+			Score score1 = new Score(0.5, game1, player5);
+			Score score5 = new Score(0.5, game1, player3);
+
+			Score score2 = new Score(0, game2, player1);
+			Score score6 = new Score(1, game2, player4);
+
+	/*		Score score3 = new Score(0.5, game3, player5);
+			Score score4 = new Score(0.5, game3, player2);*/
+
+
+
 
 
 			gamePlayerRepository.save(gamePlayer1);
 			gamePlayerRepository.save(gamePlayer2);
 			gamePlayerRepository.save(gamePlayer3);
 			gamePlayerRepository.save(gamePlayer4);
+			gamePlayerRepository.save(gamePlayer5);
+			gamePlayerRepository.save(gamePlayer6);
 
             gamePlayer1.addShip(ship1); // Michelle placed three ships carrier, battleship and destroyer
             gamePlayer1.addShip(ship2);
@@ -102,8 +113,10 @@ public class SalvoApplication {
 
 			scoreRepository.save(score1);
 			scoreRepository.save(score2);
-			scoreRepository.save(score3);
-			scoreRepository.save(score4);
+		/*	scoreRepository.save(score3);
+			scoreRepository.save(score4);*/
+			scoreRepository.save(score5);
+			scoreRepository.save(score6);
 
 
 		};

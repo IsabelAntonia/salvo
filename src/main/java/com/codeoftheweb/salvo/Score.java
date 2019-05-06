@@ -56,7 +56,7 @@ public class Score {
         return playerScore;
     }
 
-    public void setPlayersScore(double playerScore) {
+    public void setPlayerScore(double playerScore) {
         this.playerScore = playerScore;
     }
 

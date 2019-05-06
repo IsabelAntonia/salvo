@@ -87,6 +87,7 @@ public class SalvoController {
     private Map<String, Object> createGamePlayerMaps(GamePlayer gamePlayer) {
         Map<String, Object> createdGamePlayerMap = new LinkedHashMap<String, Object>();
         createdGamePlayerMap.put("gamePlayerId", gamePlayer.getId()); // i get the GamePlayerId i should have two of these
+        createdGamePlayerMap.put("scoreInThisGame", gamePlayer.getGame().getScore(gamePlayer.getPlayer()));
         createdGamePlayerMap.put("player", createPlayerMap(gamePlayer.getPlayer()));
         return createdGamePlayerMap;
     }

@@ -47,4 +47,8 @@ public class Game {
     public void setScore(Set<Score> score) {
         this.score = score;
     }
+
+    public Score getScore(Player player){
+        return player.getSingleScore(this);
+    }
 }
