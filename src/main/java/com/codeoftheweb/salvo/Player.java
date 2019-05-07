@@ -6,7 +6,7 @@ import java.util.Set;
 @Entity
 public class Player {
 
-    private String userName;
+    private String password;
     private String email;
 
     @Id
@@ -21,9 +21,10 @@ public class Player {
 
     public Player() {}
 
-    public Player (String userName, String email) {
-        this.userName = userName;
+    public Player (String email, String password) {
+
         this.email = email;
+        this.password = password;
     }
 
     public Score getSingleScore(Game game) { // i know this player
@@ -35,13 +36,11 @@ public class Player {
         return null;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    public String getPassword(){ return password; }
 
     public String getEmail() {
         return email;
@@ -57,10 +56,6 @@ public class Player {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String toString() {
-        return userName;
     }
 
     public Set<Score> getScore() {

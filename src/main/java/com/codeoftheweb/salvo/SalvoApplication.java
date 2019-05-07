@@ -22,11 +22,11 @@ public class SalvoApplication {
 	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
 
-			Player player1 = new Player("Jack", "jack@gmail.com");
-			Player player2 = new Player("Chloe", "chloe@gmail.com");
-			Player player3 = new Player("Kim", "kim@gmail.com");
-			Player player4 = new Player("David", "david@gmail.com");
-			Player player5 = new Player("Michelle", "michaelle@gmail.com");
+			Player player1 = new Player("jack@gmail.com", "kjsdkjf");
+			Player player2 = new Player("chloe@gmail.com", "kjhdfj2");
+			Player player3 = new Player("kim@gmail.com", "bvkraf34");
+			Player player4 = new Player("david@gmail.com", "vwhthb");
+			Player player5 = new Player("michaelle@gmail.com", "vnjiu56");
 
 			playerRepository.save(player1); // save the instance in the database
 			playerRepository.save(player2);
