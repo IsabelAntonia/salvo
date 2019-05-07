@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -17,6 +15,8 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/api")
 public class SalvoController {
 
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
@@ -24,7 +24,10 @@ public class SalvoController {
     @Autowired
     private GameRepository gameRepository;
 
-
+    @RequestMapping("/leaderboard")
+    public List<Object> getLeaderboardMap() {
+    return playerRepository.findAll().stream().map(player->createLeaderboardMap(player)).collect(toList());
+}
 
     @RequestMapping("/game_view/{nn}")
     public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
@@ -59,6 +62,10 @@ public class SalvoController {
     private List<Map<String, Object>> createTurnMap (Set<Salvo> salvoes) { // salvos
         return salvoes.stream().map(salvo-> createTurnMaps(salvo)).collect(toList());
     }
+
+
+
+
 
     private Map<String, Object> createShipMaps(Ship ship) {
         Map<String, Object> shipMap = new LinkedHashMap<String, Object>();
@@ -113,6 +120,27 @@ public class SalvoController {
         createdThisPlayerMap.put("playerId", gamePlayer.getPlayer().getId());
         return createdThisPlayerMap;
     }
+
+    private Map<String, Object> createLeaderboardMap(Player player) {
+        Map<String, Object> createdLeaderboardMap = new LinkedHashMap<String, Object>();
+        createdLeaderboardMap.put("email", player.getEmail()); //
+        createdLeaderboardMap.put("totalScore", pass(player.score));
+        return createdLeaderboardMap;
+    }
+
+    private List <Object> pass(Set<Score> scores) {
+        return scores.stream().map(score-> passFurther(score)).collect(toList());
+    }
+
+    private List<Object> passFurther(Score score) {
+        List<Object> createdScoreMap = new ArrayList<>();
+        createdScoreMap.add(score.getPlayerScore()); //
+        return createdScoreMap;
+    }
+
+
+
+
 
 
 }

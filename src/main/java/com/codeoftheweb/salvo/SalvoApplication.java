@@ -77,6 +77,7 @@ public class SalvoApplication {
 
 			Score score2 = new Score(0, game2, player1);
 			Score score6 = new Score(1, game2, player4);
+			Score score7 = new Score(1, game3, player5);
 
 	/*		Score score3 = new Score(0.5, game3, player5);
 			Score score4 = new Score(0.5, game3, player2);*/
@@ -117,6 +118,7 @@ public class SalvoApplication {
 			scoreRepository.save(score4);*/
 			scoreRepository.save(score5);
 			scoreRepository.save(score6);
+			scoreRepository.save(score7);
 
 
 		};

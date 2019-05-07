@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Salvo!</title>
+    <link rel="stylesheet" href="games.css">
 </head>
 <body>
 
@@ -15,10 +16,23 @@
                 <li>{{game.gamePlayers}}</li>
             </ol>
         </div>
+
     </div>
 
 
+<table >
 
+    <thead>
+    <th>Email</th>
+    <th>TotalScore</th>
+    <th>Won</th>
+    <th>Lost</th>
+    <th>Tied</th>
+    </thead>
+
+    <tbody id="table"></tbody>
+
+</table>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="games.js"></script>
