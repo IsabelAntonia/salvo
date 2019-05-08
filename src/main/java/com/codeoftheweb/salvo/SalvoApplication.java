@@ -1,4 +1,3 @@
-
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,74 +26,74 @@ import java.util.List;
 @SpringBootApplication
 public class SalvoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SalvoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SalvoApplication.class, args);
+    }
 
 
 
-	@Bean //  tells Spring 'here is an instance of this class, please keep hold of it and give it back to me when I ask'.
-	// Spring knows that the initData() method in the CommandLineRunner will need an instance of PlayerRepo.
-	// Spring will inject an instance of PlayerRepository for this parameter
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
-		return (args) -> {
+    @Bean //  tells Spring 'here is an instance of this class, please keep hold of it and give it back to me when I ask'.
+    // Spring knows that the initData() method in the CommandLineRunner will need an instance of PlayerRepo.
+    // Spring will inject an instance of PlayerRepository for this parameter
+    public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
+        return (args) -> {
 
-			Player player1 = new Player("jack@gmail.com", "kjsdkjf");
-			Player player2 = new Player("chloe@gmail.com", "kjhdfj2");
-			Player player3 = new Player("kim@gmail.com", "bvkraf34");
-			Player player4 = new Player("david@gmail.com", "vwhthb");
-			Player player5 = new Player("michaelle@gmail.com", "vnjiu56");
+            Player player1 = new Player("jack@gmail.com", "kjsdkjf");
+            Player player2 = new Player("chloe@gmail.com", "kjhdfj2");
+            Player player3 = new Player("kim@gmail.com", "bvkraf34");
+            Player player4 = new Player("david@gmail.com", "vwhthb");
+            Player player5 = new Player("michaelle@gmail.com", "vnjiu56");
 
-			playerRepository.save(player1); // save the instance in the database
-			playerRepository.save(player2);
-			playerRepository.save(player3);
-			playerRepository.save(player4);
-			playerRepository.save(player5);
-
-
-			Game game1 = new Game ();
-			Game game2 = new Game ();
-			Game game3 = new Game ();
-
-			gameRepository.save(game1);
-			gameRepository.save(game2);
-			gameRepository.save(game3);
+            playerRepository.save(player1); // save the instance in the database
+            playerRepository.save(player2);
+            playerRepository.save(player3);
+            playerRepository.save(player4);
+            playerRepository.save(player5);
 
 
-			GamePlayer gamePlayer1 = new GamePlayer(game3, player5); //Michelle
-			GamePlayer gamePlayer2 = new GamePlayer(game3, player2); // Chloe
-			GamePlayer gamePlayer3 = new GamePlayer(game2, player1); // Jack
-			GamePlayer gamePlayer4 = new GamePlayer(game1, player5); //Michelle
-			GamePlayer gamePlayer5 = new GamePlayer(game1, player3); // Kim
-			GamePlayer gamePlayer6 = new GamePlayer(game2, player4); // David
+            Game game1 = new Game ();
+            Game game2 = new Game ();
+            Game game3 = new Game ();
 
-			List<String> loc1 = Arrays.asList("E3","E4","E5","E7","E8");
-			List<String> loc2 = Arrays.asList("A5","B5","C5","D5");
-			List<String> loc3 = Arrays.asList("H1","H2","H3");
-			List<String> loc4 = Arrays.asList("I5","I6","I7");
-			List<String> loc5 = Arrays.asList("F5","G5");
-
-			List<String> salvoLoc1 = Arrays.asList("C3","G5");
-			List<String> salvoLoc2 = Arrays.asList("A4", "H10");
-			List<String> salvoLoc3 = Arrays.asList("J5", "C8", "A5");
+            gameRepository.save(game1);
+            gameRepository.save(game2);
+            gameRepository.save(game3);
 
 
-			Ship ship1 = new Ship("carrier", loc1);
-			Ship ship2 = new Ship("battleship", loc2);
-			Ship ship3 = new Ship("destroyer", loc3);
-			Ship ship4 = new Ship("Submarine", loc4);
-			Ship ship5 = new Ship("portalBoat", loc5);
+            GamePlayer gamePlayer1 = new GamePlayer(game3, player5); //Michelle
+            GamePlayer gamePlayer2 = new GamePlayer(game3, player2); // Chloe
+            GamePlayer gamePlayer3 = new GamePlayer(game2, player1); // Jack
+            GamePlayer gamePlayer4 = new GamePlayer(game1, player5); //Michelle
+            GamePlayer gamePlayer5 = new GamePlayer(game1, player3); // Kim
+            GamePlayer gamePlayer6 = new GamePlayer(game2, player4); // David
 
-			Salvo salvo1 = new Salvo(1, salvoLoc1);
-			Salvo salvo2 = new Salvo(2, salvoLoc2);
-			Salvo salvo3 = new Salvo(1, salvoLoc3);
+            List<String> loc1 = Arrays.asList("E3","E4","E5","E7","E8");
+            List<String> loc2 = Arrays.asList("A5","B5","C5","D5");
+            List<String> loc3 = Arrays.asList("H1","H2","H3");
+            List<String> loc4 = Arrays.asList("I5","I6","I7");
+            List<String> loc5 = Arrays.asList("F5","G5");
 
-			Score score1 = new Score(0.5, game1, player5);
-			Score score5 = new Score(0.5, game1, player3);
+            List<String> salvoLoc1 = Arrays.asList("C3","G5");
+            List<String> salvoLoc2 = Arrays.asList("A4", "H10");
+            List<String> salvoLoc3 = Arrays.asList("J5", "C8", "A5");
 
-			Score score2 = new Score(0, game2, player1);
-			Score score6 = new Score(1, game2, player4);
-			Score score7 = new Score(1, game3, player5);
+
+            Ship ship1 = new Ship("carrier", loc1);
+            Ship ship2 = new Ship("battleship", loc2);
+            Ship ship3 = new Ship("destroyer", loc3);
+            Ship ship4 = new Ship("Submarine", loc4);
+            Ship ship5 = new Ship("portalBoat", loc5);
+
+            Salvo salvo1 = new Salvo(1, salvoLoc1);
+            Salvo salvo2 = new Salvo(2, salvoLoc2);
+            Salvo salvo3 = new Salvo(1, salvoLoc3);
+
+            Score score1 = new Score(0.5, game1, player5);
+            Score score5 = new Score(0.5, game1, player3);
+
+            Score score2 = new Score(0, game2, player1);
+            Score score6 = new Score(1, game2, player4);
+            Score score7 = new Score(1, game3, player5);
 
 	/*		Score score3 = new Score(0.5, game3, player5);
 			Score score4 = new Score(0.5, game3, player2);*/
@@ -103,12 +102,12 @@ public class SalvoApplication {
 
 
 
-			gamePlayerRepository.save(gamePlayer1);
-			gamePlayerRepository.save(gamePlayer2);
-			gamePlayerRepository.save(gamePlayer3);
-			gamePlayerRepository.save(gamePlayer4);
-			gamePlayerRepository.save(gamePlayer5);
-			gamePlayerRepository.save(gamePlayer6);
+            gamePlayerRepository.save(gamePlayer1);
+            gamePlayerRepository.save(gamePlayer2);
+            gamePlayerRepository.save(gamePlayer3);
+            gamePlayerRepository.save(gamePlayer4);
+            gamePlayerRepository.save(gamePlayer5);
+            gamePlayerRepository.save(gamePlayer6);
 
             gamePlayer1.addShip(ship1); // Michelle placed three ships carrier, battleship and destroyer
             gamePlayer1.addShip(ship2);
@@ -119,27 +118,27 @@ public class SalvoApplication {
             gamePlayer2.addSalvo(salvo3);
 
 
-			shipRepository.save(ship1);
-			shipRepository.save(ship2);
-			shipRepository.save(ship3);
-			shipRepository.save(ship4);
-			shipRepository.save(ship5);
+            shipRepository.save(ship1);
+            shipRepository.save(ship2);
+            shipRepository.save(ship3);
+            shipRepository.save(ship4);
+            shipRepository.save(ship5);
 
-			salvoRepository.save(salvo1);
-			salvoRepository.save(salvo2);
-			salvoRepository.save(salvo3);
+            salvoRepository.save(salvo1);
+            salvoRepository.save(salvo2);
+            salvoRepository.save(salvo3);
 
-			scoreRepository.save(score1);
-			scoreRepository.save(score2);
+            scoreRepository.save(score1);
+            scoreRepository.save(score2);
 		/*	scoreRepository.save(score3);
 			scoreRepository.save(score4);*/
-			scoreRepository.save(score5);
-			scoreRepository.save(score6);
-			scoreRepository.save(score7);
+            scoreRepository.save(score5);
+            scoreRepository.save(score6);
+            scoreRepository.save(score7);
 
 
-		};
-	}
+        };
+    }
 
 }
 
@@ -153,7 +152,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
         auth.userDetailsService(inputName -> {
             System.out.println(inputName);
             Player player = playerRepository.findByEmail(inputName);
-            System.out.println(player);
+//            System.out.println(player);
             if (player != null) {
                 return User.withDefaultPasswordEncoder()
                         .username(player.getEmail())
@@ -171,9 +170,9 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 @Configuration
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
 
                 .antMatchers("/web/games.html").permitAll()
                 .antMatchers("/web/games.css").permitAll()
@@ -185,43 +184,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/web/login.js").permitAll()
 
                 .antMatchers("/api/leaderboard").permitAll()
-                .antMatchers("/web/game.html").hasAuthority("USER")
-                .antMatchers("/web/game.js").hasAuthority("USER")
-                .antMatchers("/web/game.css").hasAuthority("USER")
-                .antMatchers("/api/game_view/*").hasAuthority("USER");
-
-//                .anyRequest().denyAll();
-/*
-				// guest can access games
-				.antMatchers("/web/games.html").permitAll()
-				.antMatchers("/web/games.js").permitAll()
-				.antMatchers("/web/games1.js").permitAll()
-				.antMatchers("/web/games.css").permitAll()
-				.antMatchers("/api/games").permitAll()
-				.antMatchers("/api/login").permitAll()
-				.antMatchers("/api/leaderboard").permitAll()
-
-				.antMatchers("/web/login.html").permitAll()
-				.antMatchers("/web/login.js").permitAll()
-
-
-
-				// user can access game
-				.antMatchers("/web/game.html").hasAuthority("USER")
-				.antMatchers("/web/game.js").hasAuthority("USER")
-				.antMatchers("/web/game.css").hasAuthority("USER")
-				.antMatchers("/api/game_view/*").hasAuthority("USER")
-
-				// unclear
-				//.antMatchers("/rest/*").denyAll()
-		*//*		.antMatchers("/web/login.html").permitAll()
-				.antMatchers("/web/login.js").permitAll()*//*
-                .antMatchers("/favicon.ico").permitAll()
-
-
-
-                .anyRequest().denyAll();*/
-
+                .antMatchers("/web/game.html").authenticated()
+                .antMatchers("/web/game.js").authenticated()
+                .antMatchers("/web/game.css").authenticated()
+                .antMatchers("/api/game_view/*").authenticated();
 
 
 
@@ -230,7 +196,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 .loginPage("/api/login");
 
-		http.logout().logoutUrl("/api/logout");
+        http.logout().logoutUrl("/api/logout");
         // turn off checking for CSRF tokens
         http.csrf().disable();
 
