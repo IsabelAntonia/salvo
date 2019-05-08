@@ -145,22 +145,26 @@ public class SalvoApplication {
 
 @Configuration
 class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+    @Autowired
+    PlayerRepository playerRepository;
 
-	@Autowired
-	PlayerRepository playerRepository;
-
-	@Override
-	public void init(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(inputName -> {
-			Player player = playerRepository.findByEmail(inputName);
-			if (player != null) {
-				return new User(player.getEmail(), player.getPassword(),
-						AuthorityUtils.createAuthorityList("USER"));
-			} else {
-				throw new UsernameNotFoundException("Unknown user: " + inputName);
-			}
-		});
-	}
+    @Override
+    public void init(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(inputName -> {
+            System.out.println(inputName);
+            Player player = playerRepository.findByEmail(inputName);
+            System.out.println(player);
+            if (player != null) {
+                return User.withDefaultPasswordEncoder()
+                        .username(player.getEmail())
+                        .password(player.getPassword())
+                        .roles("USER")
+                        .build();
+            } else {
+                throw new UsernameNotFoundException("Unknown user: " + inputName);
+            }
+        });
+    }
 }
 
 @EnableWebSecurity
@@ -170,27 +174,61 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+
+                .antMatchers("/web/games.html").permitAll()
+                .antMatchers("/web/games.css").permitAll()
+                .antMatchers("/api/games").permitAll()
+                .antMatchers("/web/games1.js").permitAll()
+
+                .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/web/login.html").permitAll()
+                .antMatchers("/web/login.js").permitAll()
+
+                .antMatchers("/api/leaderboard").permitAll()
+                .antMatchers("/web/game.html").hasAuthority("USER")
+                .antMatchers("/web/game.js").hasAuthority("USER")
+                .antMatchers("/web/game.css").hasAuthority("USER")
+                .antMatchers("/api/game_view/*").hasAuthority("USER");
+
+//                .anyRequest().denyAll();
+/*
+				// guest can access games
 				.antMatchers("/web/games.html").permitAll()
 				.antMatchers("/web/games.js").permitAll()
+				.antMatchers("/web/games1.js").permitAll()
 				.antMatchers("/web/games.css").permitAll()
 				.antMatchers("/api/games").permitAll()
+				.antMatchers("/api/login").permitAll()
 				.antMatchers("/api/leaderboard").permitAll()
-//				.antMatchers("/rest/*").denyAll()
-				.antMatchers("/*").denyAll()
+
+				.antMatchers("/web/login.html").permitAll()
+				.antMatchers("/web/login.js").permitAll()
+
+
+
+				// user can access game
 				.antMatchers("/web/game.html").hasAuthority("USER")
 				.antMatchers("/web/game.js").hasAuthority("USER")
 				.antMatchers("/web/game.css").hasAuthority("USER")
-				.antMatchers("/web/login.html").hasAuthority("USER")
-				.antMatchers("/web/login.js").hasAuthority("USER")
-                .antMatchers("/api/game_view/*").hasAuthority("USER")
-                .anyRequest().denyAll();
+				.antMatchers("/api/game_view/*").hasAuthority("USER")
+
+				// unclear
+				//.antMatchers("/rest/*").denyAll()
+		*//*		.antMatchers("/web/login.html").permitAll()
+				.antMatchers("/web/login.js").permitAll()*//*
+                .antMatchers("/favicon.ico").permitAll()
 
 
 
-		http.formLogin()
-				.usernameParameter("email")
-				.passwordParameter("password")
-				.loginPage("/api/login");
+                .anyRequest().denyAll();*/
+
+
+
+
+        http.formLogin()
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .loginPage("/api/login");
 
 		http.logout().logoutUrl("/api/logout");
         // turn off checking for CSRF tokens

@@ -40,7 +40,7 @@ public class Player {
         this.password = password;
     }
 
-    public String getPassword(){ return password; }
+    public String getPassword() { return password; }
 
     public String getEmail() {
         return email;

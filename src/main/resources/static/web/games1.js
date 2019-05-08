@@ -20,7 +20,7 @@ this.data = response;
 response.gamePlayers = this.gamePlayers;
 //console.log(this.data)
 
-
+fetch('../api/leaderboard')
 .then(response => response.json())
 .then(response => {
 
@@ -115,20 +115,26 @@ var tiedLength = tied.length;
 return tiedLength;
 },
 
-sendLoginData() {
 
-console.log('hi')
-	    /*            let email = document.getElementById("email").value;
-	                let pw = document.getElementById("pw").value;
-	                console.log(email);
-	                console.log(pw);*/
 
-	          /*      $.post( "/api/login", { email: email, password: pw })
-	              .done(function( data ) {
-	                alert(console.log("logged in"));
-	              });}*/
+   login() {
+                let email = document.getElementById("email").value.toLowerCase();
+                let password = document.getElementById("password").value;
+
+                $.post("/api/login", {
+                        email: email,
+                        password: password
+                    })
+                    .then(response => {
+                        // console.log("logged in"),
+                        console.log(JSON.stringify(response)),
+                            location.reload();
+                    })
+                    .catch(error => console.error('Error:', error))
 
 }
+
+
 
 
 
