@@ -7,6 +7,8 @@ data: {
 data: null,
 gamePlayers: [],
 leaderBoardData: null,
+loginPos: true
+
 
 },
 
@@ -17,17 +19,33 @@ fetch('../api/games')
 .then(response => {
 
 this.data = response;
-response.gamePlayers = this.gamePlayers;
-//console.log(this.data)
+
+console.log(this.data)
+
 
 fetch('../api/leaderboard')
 .then(response => response.json())
 .then(response => {
 
 this.leaderBoardData = response;
-console.log(this.leaderBoardData);
+
 
 this.buildTable(this.leaderBoardData);
+
+console.log(this.loginPos)
+if (this.data.currentUser !== null){
+
+this.loginPos = false;
+}
+
+else {
+
+this.loginPos = true;
+
+}
+
+console.log(this.loginPos)
+
 
 })
 
@@ -118,6 +136,7 @@ return tiedLength;
 
 
 login() {
+
     let email = document.getElementById("email").value;
     console.log(email);
     let pw = document.getElementById("password").value;
@@ -134,14 +153,51 @@ login() {
             body: "email=" + email + "&password=" + pw
         })
         .then(function(res){
-            console.log(res);
-            console.log('yes');
-//            location.reload();
+
+            location.reload();
+
+
+
         })
         .catch(function(res){ console.log(res) });
 
-}
+},
 
+logout() {
+    $.post("/api/logout").done(function(){location.reload();})
+
+},
+
+signUp(){
+
+   let email = document.getElementById("email").value;
+    console.log(email);
+    let pw = document.getElementById("password").value;
+    console.log(pw);
+
+    fetch("/api/players",
+        {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            method: "POST",
+            body: "email=" + email + "&password=" + pw
+        })
+        .then(function(res){
+        console.log(res)
+
+//            location.reload();
+
+
+
+
+        })
+        .catch(function(res){ console.log(res) });
+
+
+}
 
 
 

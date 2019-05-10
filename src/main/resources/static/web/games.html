@@ -9,11 +9,16 @@
 
 
     <div id="app">
-        <!--<form name='f' action="login" method='POST'>-->
-        <input  id="email" type="text"  placeholder="email" value="">
-        <input id="password" type="text" placeholder="password" value="">
-        <input type="submit" @click="login()">
-</form>
+
+        <div v-if="loginPos">
+        <input  id="email" type="text"  placeholder="Email" value="">
+        <input id="password" type="text" placeholder="Password" value="">
+        <button @click="login()">Login</button>
+        <button  @click="signUp()">Signup</button>
+        </div>
+
+       <button v-else @click="logout()">Logout</button>
+
 
         <div v-for="game in data">
             <ol>
