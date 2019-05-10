@@ -117,22 +117,37 @@ return tiedLength;
 
 
 
-   login() {
-                let email = document.getElementById("email").value.toLowerCase();
-                let password = document.getElementById("password").value;
+login() {
+    let email = document.getElementById("email").value;
+    console.log(email);
+    let pw = document.getElementById("password").value;
+    console.log(pw);
 
-                $.post("/api/login", {
-                        email: email,
-                        password: password
-                    })
-                    .then(response => {
-                        // console.log("logged in"),
-                        console.log(JSON.stringify(response)),
-                            location.reload();
-                    })
-                    .catch(error => console.error('Error:', error))
+    fetch("/login",
+        {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            method: "POST",
+            body: "email=" + email + "&password=" + pw
+        })
+        .then(function(res){
+            console.log(res);
+            console.log('yes');
+//            location.reload();
+        })
+        .catch(function(res){ console.log(res) });
 
 }
+
+
+
+
+
+
+
 
 
 
