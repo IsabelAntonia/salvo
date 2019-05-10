@@ -2,6 +2,8 @@ package com.codeoftheweb.salvo;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,9 +44,27 @@ public class SalvoController {
 
     @RequestMapping("/games") // see all games and the related information
     // this method is called when someone requests /games
-    public List<Object> getGameMap() {
-        return gameRepository.findAll().stream().map(game->createGameMap(game)).collect(toList());
+    public Map<String, Object> getGamesandCurrentPlayer() {
+        Map<String, Object> newMap = new LinkedHashMap<>();
+        Authentication authentication = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        if (authentication.getName() == "anonymousUser"){
+            newMap.put("currentUser", null);
+
+        }
+
+        else {
+            newMap.put("currentUser", createPlayerMap(authenticatedUser(authentication)));
+        }
+        newMap.put("games",gameRepository.findAll().stream().map(game->createGameMap(game)).collect(toList()));
+        return newMap;
     }
+/*    public List<Object> getGameMap() {
+        return gameRepository.findAll().stream().map(game->createGameMap(game)).collect(toList());
+    }*/
+
+
 
     private List<Map<String, Object>> createShipMap (Set<Ship> ships) {
         return ships.stream().map(ship-> createShipMaps(ship)).collect(toList());
@@ -63,9 +83,9 @@ public class SalvoController {
         return salvoes.stream().map(salvo-> createTurnMaps(salvo)).collect(toList());
     }
 
-
-
-
+    public Player authenticatedUser(Authentication authentication) {
+        return playerRepository.findByEmail(authentication.getName());
+    }
 
     private Map<String, Object> createShipMaps(Ship ship) {
         Map<String, Object> shipMap = new LinkedHashMap<String, Object>();
