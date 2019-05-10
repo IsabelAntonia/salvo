@@ -2,11 +2,12 @@ package com.codeoftheweb.salvo;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -28,8 +29,8 @@ public class SalvoController {
 
     @RequestMapping("/leaderboard")
     public List<Object> getLeaderboardMap() {
-    return playerRepository.findAll().stream().map(player->createLeaderboardMap(player)).collect(toList());
-}
+        return playerRepository.findAll().stream().map(player -> createLeaderboardMap(player)).collect(toList());
+    }
 
     @RequestMapping("/game_view/{nn}")
     public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
@@ -49,15 +50,13 @@ public class SalvoController {
         Authentication authentication = SecurityContextHolder
                 .getContext()
                 .getAuthentication();
-        if (authentication.getName() == "anonymousUser"){
+        if (authentication.getName() == "anonymousUser") {
             newMap.put("currentUser", null);
 
-        }
-
-        else {
+        } else {
             newMap.put("currentUser", createPlayerMap(authenticatedUser(authentication)));
         }
-        newMap.put("games",gameRepository.findAll().stream().map(game->createGameMap(game)).collect(toList()));
+        newMap.put("games", gameRepository.findAll().stream().map(game -> createGameMap(game)).collect(toList()));
         return newMap;
     }
 /*    public List<Object> getGameMap() {
@@ -65,22 +64,21 @@ public class SalvoController {
     }*/
 
 
-
-    private List<Map<String, Object>> createShipMap (Set<Ship> ships) {
-        return ships.stream().map(ship-> createShipMaps(ship)).collect(toList());
+    private List<Map<String, Object>> createShipMap(Set<Ship> ships) {
+        return ships.stream().map(ship -> createShipMaps(ship)).collect(toList());
     }
 
 
-    private List<Map<String, Object>> createGamePlayerMap (Set<GamePlayer> gamePlayer) {
-        return gamePlayer.stream().map(gameplayer-> createGamePlayerMaps(gameplayer)).collect(toList());
+    private List<Map<String, Object>> createGamePlayerMap(Set<GamePlayer> gamePlayer) {
+        return gamePlayer.stream().map(gameplayer -> createGamePlayerMaps(gameplayer)).collect(toList());
     }
 
-    private List<Map<String, Object>> createSalvoMaps (Set<GamePlayer> gamePlayer) { // salvos
-        return gamePlayer.stream().map(gameplayer-> createFinalSalvoMap(gameplayer)).collect(toList());
+    private List<Map<String, Object>> createSalvoMaps(Set<GamePlayer> gamePlayer) { // salvos
+        return gamePlayer.stream().map(gameplayer -> createFinalSalvoMap(gameplayer)).collect(toList());
     }
 
-    private List<Map<String, Object>> createTurnMap (Set<Salvo> salvoes) { // salvos
-        return salvoes.stream().map(salvo-> createTurnMaps(salvo)).collect(toList());
+    private List<Map<String, Object>> createTurnMap(Set<Salvo> salvoes) { // salvos
+        return salvoes.stream().map(salvo -> createTurnMaps(salvo)).collect(toList());
     }
 
     public Player authenticatedUser(Authentication authentication) {
@@ -148,8 +146,8 @@ public class SalvoController {
         return createdLeaderboardMap;
     }
 
-    private List <Object> pass(Set<Score> scores) {
-        return scores.stream().map(score-> passFurther(score)).collect(toList());
+    private List<Object> pass(Set<Score> scores) {
+        return scores.stream().map(score -> passFurther(score)).collect(toList());
     }
 
     private List<Object> passFurther(Score score) {
@@ -158,6 +156,18 @@ public class SalvoController {
         return createdScoreMap;
     }
 
+    @RequestMapping(value = "/players", method = RequestMethod.POST)
+    public ResponseEntity signUp(ModelMap model,
+                                                @RequestParam String email,
+                                                @RequestParam String password) {
+
+        if (playerRepository.findByEmail(email) == null) {
+            playerRepository.save(new Player(email, password));
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
 
 
 
