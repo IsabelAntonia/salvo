@@ -4,8 +4,7 @@ el: '#app',
 
 data: {
 
-data: null,
-gamePlayers: [],
+games: [],
 leaderBoardData: null,
 loginPos: true
 
@@ -18,9 +17,11 @@ fetch('../api/games')
 .then(response => response.json())
 .then(response => {
 
-this.data = response;
+data = response;
 
-console.log(this.data)
+this.games = data.games;
+
+
 
 
 fetch('../api/leaderboard')
@@ -33,7 +34,7 @@ this.leaderBoardData = response;
 this.buildTable(this.leaderBoardData);
 
 
-if (this.data.currentUser !== null){
+if (data.currentUser !== null){
 
 this.loginPos = false;
 }

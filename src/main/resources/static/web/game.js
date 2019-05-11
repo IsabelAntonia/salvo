@@ -172,7 +172,11 @@
 
                 },
                 logout() {
-                    $.post("/api/logout").done(function(){location.reload();})
+                    $.post("/api/logout").done(function(){
+
+                       location.replace(`http://localhost:8080/web/games.html`);
+
+                    })
 
                 }
             }

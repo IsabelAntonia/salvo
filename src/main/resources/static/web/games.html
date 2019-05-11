@@ -21,11 +21,11 @@
 
 <p v-if="!loginPos">Welcome, {{data.currentUser.playerEmail}}</p>
 
-        <div v-for="game in data.games">
+        <div v-for="game in games">
             <ol>
-                <li>{{game.GameId}}</li>
-                <li>{{game.creationDate}}</li>
-                <li>{{game.gamePlayers}}</li>
+                <li>GameId: {{game.GameId}}</li>
+                <li>creationDate: {{game.creationDate}}</li>
+                <li>GamePlayers: {{game.gamePlayers}}</li>
             </ol>
         </div>
 
