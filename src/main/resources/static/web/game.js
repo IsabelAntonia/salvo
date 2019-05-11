@@ -170,6 +170,10 @@
 
                     }
 
+                },
+                logout() {
+                    $.post("/api/logout").done(function(){location.reload();})
+
                 }
             }
         })

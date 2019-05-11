@@ -32,7 +32,7 @@ this.leaderBoardData = response;
 
 this.buildTable(this.leaderBoardData);
 
-console.log(this.loginPos)
+
 if (this.data.currentUser !== null){
 
 this.loginPos = false;
@@ -44,7 +44,7 @@ this.loginPos = true;
 
 }
 
-console.log(this.loginPos)
+
 
 
 })
@@ -138,29 +138,15 @@ return tiedLength;
 login() {
 
     let email = document.getElementById("email").value;
-    console.log(email);
     let pw = document.getElementById("password").value;
-    console.log(pw);
 
-    fetch("/login",
-        {
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            method: "POST",
-            body: "email=" + email + "&password=" + pw
-        })
-        .then(function(res){
+     $.post("/login", { email: email, password: pw })
+     .done(function() {
 
-            location.reload();
+location.reload();
 
-
-
-        })
-        .catch(function(res){ console.log(res) });
-
+     })
+     .fail(function(){ console.log('uups')})
 },
 
 logout() {
@@ -171,46 +157,32 @@ logout() {
 signUp(){
 
    let email = document.getElementById("email").value;
-    console.log(email);
     let pw = document.getElementById("password").value;
-    console.log(pw);
 
-    fetch("/api/players",
-        {
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            method: "POST",
-            body: "email=" + email + "&password=" + pw
-        })
-        .then(function(res){
-        console.log(res)
+    $.post("/api/players", { email: email, password: pw })
+    .done(function() {
 
-//            location.reload();
+    fetch("/login",
+               {
+                   credentials: 'include',
+                   headers: {
+                       'Accept': 'application/json',
+                       'Content-Type': 'application/x-www-form-urlencoded'
+                   },
+                   method: "POST",
+                   body: "email=" + email + "&password=" + pw
+               })
+               .then(function(res){
 
+                   location.reload();
 
-
-
-        })
-        .catch(function(res){ console.log(res) });
-
-
+               })
+               .catch(function(res){ console.log(res) });
+    })
+    .fail(function(){ console.log('uups')})
 }
 
-
-
-
-
-
-
-
-
-
-
 }
-
 
 
 })

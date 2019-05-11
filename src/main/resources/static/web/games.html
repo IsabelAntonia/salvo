@@ -19,8 +19,9 @@
 
        <button v-else @click="logout()">Logout</button>
 
+<p v-if="!loginPos">Welcome, {{data.currentUser.playerEmail}}</p>
 
-        <div v-for="game in data">
+        <div v-for="game in data.games">
             <ol>
                 <li>{{game.GameId}}</li>
                 <li>{{game.creationDate}}</li>
