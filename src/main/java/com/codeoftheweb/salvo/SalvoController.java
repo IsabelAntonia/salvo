@@ -165,7 +165,7 @@ public class SalvoController {
             playerRepository.save(new Player(email, password));
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Name is in use" ,HttpStatus.FORBIDDEN);
         }
     }
 

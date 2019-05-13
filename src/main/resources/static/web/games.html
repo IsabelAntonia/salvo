@@ -21,7 +21,21 @@
 
 <p v-if="!loginPos">Welcome, {{data.currentUser.playerEmail}}</p>
 
-        <div v-for="game in games">
+        <p v-if="reenterPos">Re-enter a game!</p>
+
+        <div v-for="game in linkedGames">
+            <ol>
+                <li>GameId: {{game.GameId}}</li>
+                <li>creationDate: {{game.creationDate}}</li>
+                <li>GamePlayers: {{game.gamePlayers}}</li>
+            </ol>
+        </div>
+
+        <hr v-if="reenterPos">
+
+        <p v-if="reenterPos">Or join a new game, that is looking for a player!</p>
+
+        <div v-for="game in notLinkedGames">
             <ol>
                 <li>GameId: {{game.GameId}}</li>
                 <li>creationDate: {{game.creationDate}}</li>

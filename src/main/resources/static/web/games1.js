@@ -6,7 +6,11 @@ data: {
 
 games: [],
 leaderBoardData: null,
-loginPos: true
+loginPos: true,
+linkedGames: [],
+notLinkedGames: [],
+reenterPos: false
+
 
 
 },
@@ -18,8 +22,11 @@ fetch('../api/games')
 .then(response => {
 
 data = response;
+console.log(response)
 
 this.games = data.games;
+
+this.makeLinks();
 
 
 
@@ -181,6 +188,50 @@ signUp(){
                .catch(function(res){ console.log(res) });
     })
     .fail(function(){ console.log('uups')})
+},
+
+makeLinks(){
+
+if (data.currentUser !== null){
+
+
+for (var i = 0; i < data.games.length; i++){ // three games
+
+for (var j = 0; j < data.games[i].gamePlayers.length; j++){ // two gamePlayers or only one
+
+
+if (data.games[i].gamePlayers[j].player.playerId === data.currentUser.playerId){
+
+this.reenterPos = true;
+
+if (!this.linkedGames.includes(data.games[i])){
+
+this.linkedGames.push(data.games[i]);}
+
+}
+
+
+}
+}
+
+for (var u = 0; u < data.games.length; u++){
+
+if (!this.linkedGames.includes(data.games[u])){
+
+this.notLinkedGames.push(data.games[u]);
+
+}
+
+}
+
+}
+
+else {
+
+this.notLinkedGames = data.games;
+
+}
+
 }
 
 }
