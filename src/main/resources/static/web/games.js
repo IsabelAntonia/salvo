@@ -4,9 +4,14 @@ el: '#app',
 
 data: {
 
-data: null,
-gamePlayers: [],
+games: [],
 leaderBoardData: null,
+loginPos: true,
+linkedGames: [],
+notLinkedGames: [],
+reenterPos: false
+
+
 
 },
 
@@ -16,18 +21,39 @@ fetch('../api/games')
 .then(response => response.json())
 .then(response => {
 
-this.data = response;
-response.gamePlayers = this.gamePlayers;
-//console.log(this.data)
+data = response;
+console.log(response)
+
+this.games = data.games;
+
+this.makeLinks();
 
 
+
+
+fetch('../api/leaderboard')
 .then(response => response.json())
 .then(response => {
 
 this.leaderBoardData = response;
-console.log(this.leaderBoardData);
+
 
 this.buildTable(this.leaderBoardData);
+
+
+if (data.currentUser !== null){
+
+this.loginPos = false;
+}
+
+else {
+
+this.loginPos = true;
+
+}
+
+
+
 
 })
 
@@ -115,25 +141,100 @@ var tiedLength = tied.length;
 return tiedLength;
 },
 
-sendLoginData() {
 
-console.log('hi')
-	    /*            let email = document.getElementById("email").value;
-	                let pw = document.getElementById("pw").value;
-	                console.log(email);
-	                console.log(pw);*/
 
-	          /*      $.post( "/api/login", { email: email, password: pw })
-	              .done(function( data ) {
-	                alert(console.log("logged in"));
-	              });}*/
+login() {
+
+    let email = document.getElementById("email").value;
+    let pw = document.getElementById("password").value;
+
+     $.post("/login", { email: email, password: pw })
+     .done(function() {
+
+location.reload();
+
+     })
+     .fail(function(){ console.log('uups')})
+},
+
+logout() {
+    $.post("/api/logout").done(function(){location.reload();})
+
+},
+
+signUp(){
+
+   let email = document.getElementById("email").value;
+    let pw = document.getElementById("password").value;
+
+    $.post("/api/players", { email: email, password: pw })
+    .done(function() {
+
+    fetch("/login",
+               {
+                   credentials: 'include',
+                   headers: {
+                       'Accept': 'application/json',
+                       'Content-Type': 'application/x-www-form-urlencoded'
+                   },
+                   method: "POST",
+                   body: "email=" + email + "&password=" + pw
+               })
+               .then(function(res){
+
+                   location.reload();
+
+               })
+               .catch(function(res){ console.log(res) });
+    })
+    .fail(function(){ console.log('uups')})
+},
+
+makeLinks(){
+
+if (data.currentUser !== null){
+
+
+for (var i = 0; i < data.games.length; i++){ // three games
+
+for (var j = 0; j < data.games[i].gamePlayers.length; j++){ // two gamePlayers or only one
+
+
+if (data.games[i].gamePlayers[j].player.playerId === data.currentUser.playerId){
+
+this.reenterPos = true;
+
+if (!this.linkedGames.includes(data.games[i])){
+
+this.linkedGames.push(data.games[i]);}
 
 }
 
 
+}
+}
+
+for (var u = 0; u < data.games.length; u++){
+
+if (!this.linkedGames.includes(data.games[u])){
+
+this.notLinkedGames.push(data.games[u]);
 
 }
 
+}
+
+}
+
+else {
+
+this.notLinkedGames = data.games;
+
+}
+
+}
+
+}
 
 
 })
