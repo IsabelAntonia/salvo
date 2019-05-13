@@ -25,7 +25,7 @@
 
         <div v-for="game in linkedGames">
             <ol>
-                <li><a href="game.html?gp=1">GameId: {{game.GameId}}</a></li>
+                <li><a @click="insertPathVariable()" class="linked">GameId: {{game.GameId}}</a></li>
                 <li>creationDate: {{game.creationDate}}</li>
                 <li>GamePlayers: {{game.gamePlayers}}</li>
             </ol>

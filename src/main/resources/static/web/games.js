@@ -31,6 +31,7 @@ this.makeLinks();
 
 
 
+
 fetch('../api/leaderboard')
 .then(response => response.json())
 .then(response => {
@@ -58,6 +59,12 @@ this.loginPos = true;
 })
 
 });
+
+},
+
+mounted(){
+
+//this.insertPathVariable();
 
 },
 
@@ -231,6 +238,35 @@ else {
 this.notLinkedGames = data.games;
 
 }
+
+},
+
+insertPathVariable(){
+
+// for all list elements with the class linked set attribute
+var linkedGamesCollection = document.getElementsByClassName("linked");
+
+console.log(linkedGamesCollection[0])
+
+var linkedGamesArray = Array.from(linkedGamesCollection)
+
+console.log(linkedGamesArray)
+
+var pathVar = 1;
+
+for (var i = 0; i < linkedGamesArray.length; i++){
+
+linkedGamesArray[i].setAttribute("href","game.html?gp="+pathVar)
+
+
+}
+
+/*
+arr[i].setAttribute("href","game.html?gp=1")
+arr[i].style.color = "red";*/
+
+
+
 
 }
 
