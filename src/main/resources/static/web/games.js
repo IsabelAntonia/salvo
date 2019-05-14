@@ -9,7 +9,8 @@ leaderBoardData: null,
 loginPos: true,
 linkedGames: [],
 notLinkedGames: [],
-reenterPos: false
+reenterPos: false,
+linkedGamesArray: []
 
 
 
@@ -59,12 +60,6 @@ this.loginPos = true;
 })
 
 });
-
-},
-
-mounted(){
-
-//this.insertPathVariable();
 
 },
 
@@ -243,33 +238,39 @@ this.notLinkedGames = data.games;
 
 insertPathVariable(){
 
-// for all list elements with the class linked set attribute
 var linkedGamesCollection = document.getElementsByClassName("linked");
 
-console.log(linkedGamesCollection[0])
+this.linkedGamesArray = Array.from(linkedGamesCollection)
 
-var linkedGamesArray = Array.from(linkedGamesCollection)
-
-console.log(linkedGamesArray)
-
-var pathVar = 1;
-
-for (var i = 0; i < linkedGamesArray.length; i++){
-
-linkedGamesArray[i].setAttribute("href","game.html?gp="+pathVar)
+var gameId = event.target.id;
+var playerId = data.currentUser.playerId;
 
 
+    fetch("/api/getGamePlayerID",
+               {
+                   credentials: 'include',
+                   headers: {
+                       'Accept': 'application/json',
+                       'Content-Type': 'application/x-www-form-urlencoded'
+                   },
+                   method: "POST",
+                   body: "gameId=" + gameId + "&playerId=" + playerId
+               })
+               .then(response => response.json())
+               .then(response => {
+
+               var pathVar;
+
+               pathVar = response;
+
+         for (var i = 0; i < this.linkedGamesArray.length; i++){
+
+              this.linkedGamesArray[i].setAttribute("href","game.html?gp="+pathVar)
+
+              }
+
+               })
 }
-
-/*
-arr[i].setAttribute("href","game.html?gp=1")
-arr[i].style.color = "red";*/
-
-
-
-
-}
-
 }
 
 

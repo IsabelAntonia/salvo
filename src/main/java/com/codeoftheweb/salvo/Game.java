@@ -51,4 +51,21 @@ public class Game {
     public Score getScore(Player player){
         return player.getSingleScore(this);
     }
+
+    public Long customFunction (Set <GamePlayer> gamePlayers, long playerId){
+
+        for (GamePlayer gamePlayer: gamePlayers){
+
+            if (gamePlayer.getPlayer().getId() == playerId){
+                return gamePlayer.getId();
+            }
+
+
+        }
+        return null;
+    }
+
+
+
+
 }

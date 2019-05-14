@@ -25,7 +25,8 @@
 
         <div v-for="game in linkedGames">
             <ol>
-                <li><a @click="insertPathVariable()" class="linked">GameId: {{game.GameId}}</a></li>
+                <li><a @click="insertPathVariable()" :id = "game.GameId" style="color: green; cursor: pointer"
+                      class="linked">GameId: {{game.GameId}}</a></li>
                 <li>creationDate: {{game.creationDate}}</li>
                 <li>GamePlayers: {{game.gamePlayers}}</li>
             </ol>

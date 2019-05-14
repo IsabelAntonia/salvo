@@ -169,6 +169,24 @@ public class SalvoController {
         }
     }
 
+    @RequestMapping (value = "/getGamePlayerID", method = RequestMethod.POST)
+
+    private Long returnCorrectGamePlayerId(@RequestParam long gameId,
+                                     @RequestParam long playerId) {
+     return customFunc(gameRepository.findById(gameId), playerId);
+
+
+    }
+
+    private Long customFunc(Game game, Long playerId){
+
+        return game.customFunction(game.gamePlayer, playerId);
+
+    }
+
+
+//$.post("/getGamePlayerID", { gameId: 2, playerId: 1 }).done(function() { console.log("success"); })
+
 
 
 
