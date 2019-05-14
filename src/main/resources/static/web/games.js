@@ -1,275 +1,286 @@
-var vm = new Vue ({
+var vm = new Vue({
 
-el: '#app',
+    el: '#app',
 
-data: {
+    data: {
 
-games: [],
-leaderBoardData: null,
-loginPos: true,
-linkedGames: [],
-notLinkedGames: [],
-reenterPos: false,
-linkedGamesArray: []
+        games: [],
+        leaderBoardData: null,
+        loginPos: true,
+        linkedGames: [],
+        notLinkedGames: [],
+        reenterPos: false,
+        linkedGamesArray: []
 
 
 
-},
+    },
 
-beforeCreate(){
+    beforeCreate() {
 
-fetch('../api/games')
-.then(response => response.json())
-.then(response => {
+        fetch('../api/games')
+            .then(response => response.json())
+            .then(response => {
 
-data = response;
-console.log(response)
+                data = response;
+                console.log(response)
 
-this.games = data.games;
+                this.games = data.games;
 
-this.makeLinks();
+                this.makeLinks();
 
 
 
 
 
-fetch('../api/leaderboard')
-.then(response => response.json())
-.then(response => {
+                fetch('../api/leaderboard')
+                    .then(response => response.json())
+                    .then(response => {
 
-this.leaderBoardData = response;
+                        this.leaderBoardData = response;
 
 
-this.buildTable(this.leaderBoardData);
+                        this.buildTable(this.leaderBoardData);
 
 
-if (data.currentUser !== null){
+                        if (data.currentUser !== null) {
 
-this.loginPos = false;
-}
+                            this.loginPos = false;
+                        } else {
 
-else {
+                            this.loginPos = true;
 
-this.loginPos = true;
+                        }
 
-}
 
 
 
+                    })
 
-})
+            });
 
-});
+    },
 
-},
+    methods: {
+        buildTable(leaderBoardData) {
 
-methods: {
-buildTable(leaderBoardData){
 
+            for (var i = 0; i < leaderBoardData.length; i++) {
 
-for (var i = 0; i < leaderBoardData.length; i++){
+                if (leaderBoardData[i].totalScore.length !== 0) {
 
-if (leaderBoardData[i].totalScore.length !== 0){
+                    var row = document.createElement('tr');
+                    row.insertCell().innerHTML = leaderBoardData[i].email;
+                    row.insertCell().innerHTML = this.calculateTotalScore(leaderBoardData[i].totalScore.flat());
+                    row.insertCell().innerHTML = this.calculateWon(leaderBoardData[i].totalScore.flat());
+                    row.insertCell().innerHTML = this.calculateLost(leaderBoardData[i].totalScore.flat());
+                    row.insertCell().innerHTML = this.calculateTied(leaderBoardData[i].totalScore.flat());
+                    document.getElementById('table').append(row);
+                }
 
-var row = document.createElement('tr');
-row.insertCell().innerHTML = leaderBoardData[i].email;
-row.insertCell().innerHTML = this.calculateTotalScore(leaderBoardData[i].totalScore.flat());
-row.insertCell().innerHTML = this.calculateWon(leaderBoardData[i].totalScore.flat());
-row.insertCell().innerHTML = this.calculateLost(leaderBoardData[i].totalScore.flat());
-row.insertCell().innerHTML = this.calculateTied(leaderBoardData[i].totalScore.flat());
-document.getElementById('table').append(row);
-}
+            }
 
-}
 
+        },
 
-},
+        calculateTotalScore(arrayScores) {
 
-calculateTotalScore(arrayScores){
 
 
+            var sum = arrayScores.reduce((acc, val) => {
 
-var sum = arrayScores.reduce((acc, val) => {
+                return acc + val;
 
-return acc + val;
+            })
 
-})
+            return sum;
 
-return sum;
+        },
 
-},
+        calculateWon(arrayScores) {
 
-calculateWon(arrayScores){
 
+            var won = arrayScores.filter(element => {
 
-var won = arrayScores.filter(element => {
+                return (element === 1 || element === 1.0)
 
-return (element === 1 || element === 1.0)
+            })
 
-})
+            var wonLength = won.length;
 
-var wonLength = won.length;
+            return wonLength;
 
-return wonLength;
+        },
 
-},
+        calculateLost(arrayScores) {
 
-calculateLost(arrayScores){
 
+            var lost = arrayScores.filter(element => {
 
-var lost = arrayScores.filter(element => {
+                return (element === 0)
 
-return (element === 0)
+            })
 
-})
+            var lostLength = lost.length;
 
-var lostLength = lost.length;
+            return lostLength;
+        },
 
-return lostLength;
-},
 
+        calculateTied(arrayScores) {
 
-calculateTied(arrayScores){
 
+            var tied = arrayScores.filter(element => {
 
-var tied = arrayScores.filter(element => {
+                return (element === 0.5)
 
-return (element === 0.5)
+            })
 
-})
+            var tiedLength = tied.length;
 
-var tiedLength = tied.length;
+            return tiedLength;
+        },
 
-return tiedLength;
-},
 
 
+        login() {
 
-login() {
+            let email = document.getElementById("email").value;
+            let pw = document.getElementById("password").value;
 
-    let email = document.getElementById("email").value;
-    let pw = document.getElementById("password").value;
+            $.post("/login", {
+                    email: email,
+                    password: pw
+                })
+                .done(function () {
 
-     $.post("/login", { email: email, password: pw })
-     .done(function() {
+                    location.reload();
 
-location.reload();
+                })
+                .fail(function () {
+                    console.log('uups')
+                })
+        },
 
-     })
-     .fail(function(){ console.log('uups')})
-},
+        logout() {
+            $.post("/api/logout").done(function () {
+                location.reload();
+            })
 
-logout() {
-    $.post("/api/logout").done(function(){location.reload();})
+        },
 
-},
+        signUp() {
 
-signUp(){
+            let email = document.getElementById("email").value;
+            let pw = document.getElementById("password").value;
 
-   let email = document.getElementById("email").value;
-    let pw = document.getElementById("password").value;
+            $.post("/api/players", {
+                    email: email,
+                    password: pw
+                })
+                .done(function () {
 
-    $.post("/api/players", { email: email, password: pw })
-    .done(function() {
+                    fetch("/login", {
+                            credentials: 'include',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            method: "POST",
+                            body: "email=" + email + "&password=" + pw
+                        })
+                        .then(function (res) {
 
-    fetch("/login",
-               {
-                   credentials: 'include',
-                   headers: {
-                       'Accept': 'application/json',
-                       'Content-Type': 'application/x-www-form-urlencoded'
-                   },
-                   method: "POST",
-                   body: "email=" + email + "&password=" + pw
-               })
-               .then(function(res){
+                            location.reload();
 
-                   location.reload();
+                        })
+                        .catch(function (res) {
+                            console.log(res)
+                        });
+                })
+                .fail(function () {
+                    console.log('uups')
+                })
+        },
 
-               })
-               .catch(function(res){ console.log(res) });
-    })
-    .fail(function(){ console.log('uups')})
-},
+        makeLinks() {
 
-makeLinks(){
+            if (data.currentUser !== null) {
 
-if (data.currentUser !== null){
 
+                for (var i = 0; i < data.games.length; i++) { // three games
 
-for (var i = 0; i < data.games.length; i++){ // three games
+                    for (var j = 0; j < data.games[i].gamePlayers.length; j++) { // two gamePlayers or only one
 
-for (var j = 0; j < data.games[i].gamePlayers.length; j++){ // two gamePlayers or only one
 
+                        if (data.games[i].gamePlayers[j].player.playerId === data.currentUser.playerId) {
 
-if (data.games[i].gamePlayers[j].player.playerId === data.currentUser.playerId){
+                            this.reenterPos = true;
 
-this.reenterPos = true;
+                            if (!this.linkedGames.includes(data.games[i])) {
 
-if (!this.linkedGames.includes(data.games[i])){
+                                this.linkedGames.push(data.games[i]);
+                            }
 
-this.linkedGames.push(data.games[i]);}
+                        }
 
-}
 
+                    }
+                }
 
-}
-}
+                for (var u = 0; u < data.games.length; u++) {
 
-for (var u = 0; u < data.games.length; u++){
+                    if (!this.linkedGames.includes(data.games[u])) {
 
-if (!this.linkedGames.includes(data.games[u])){
+                        this.notLinkedGames.push(data.games[u]);
 
-this.notLinkedGames.push(data.games[u]);
+                    }
 
-}
+                }
 
-}
+            } else {
 
-}
+                this.notLinkedGames = data.games;
 
-else {
+            }
 
-this.notLinkedGames = data.games;
+        },
 
-}
+        insertPathVariable() {
 
-},
+            var linkedGamesCollection = document.getElementsByClassName("linked");
 
-insertPathVariable(){
+            this.linkedGamesArray = Array.from(linkedGamesCollection)
 
-var linkedGamesCollection = document.getElementsByClassName("linked");
+            var gameId = event.target.id;
+            var playerId = data.currentUser.playerId;
 
-this.linkedGamesArray = Array.from(linkedGamesCollection)
 
-var gameId = event.target.id;
-var playerId = data.currentUser.playerId;
+            fetch("/api/getGamePlayerID", {
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    method: "POST",
+                    body: "gameId=" + gameId + "&playerId=" + playerId
+                })
+                .then(response => response.json())
+                .then(response => {
 
+                    var pathVar;
 
-    fetch("/api/getGamePlayerID",
-               {
-                   credentials: 'include',
-                   headers: {
-                       'Accept': 'application/json',
-                       'Content-Type': 'application/x-www-form-urlencoded'
-                   },
-                   method: "POST",
-                   body: "gameId=" + gameId + "&playerId=" + playerId
-               })
-               .then(response => response.json())
-               .then(response => {
+                    pathVar = response;
 
-               var pathVar;
 
-               pathVar = response;
 
-               location.replace(`http://localhost:8080/web/game.html?gp=`+pathVar);
+                    location.replace(`http://localhost:8080/web/game.html?gp=` + pathVar);
 
 
 
-               })
-}
-}
+                })
+        }
+    }
 
 
 })

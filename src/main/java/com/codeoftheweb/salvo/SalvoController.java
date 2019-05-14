@@ -33,7 +33,20 @@ public class SalvoController {
     }
 
     @RequestMapping("/game_view/{nn}")
-    public Map<String, Object> findgamePlayer(@PathVariable Long nn) {
+    public ResponseEntity<Map<String, Object>> findGamePlayer(@PathVariable long nn, Authentication authentication) {
+        GamePlayer requestedGP = gamePlayerRepository.findById(nn);
+
+        if (requestedGP.getPlayer() == authenticatedUser(authentication)){
+
+            return new ResponseEntity<>(findgamePlayer(nn), HttpStatus.OK);
+        }
+
+        else {
+            return new ResponseEntity<>(makeMapforError("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    public Map<String, Object> findgamePlayer(Long nn) {
         Map<String, Object> gameMapSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
@@ -42,6 +55,7 @@ public class SalvoController {
         gameMapSet.put("Salvoes", createSalvoMaps(gamePlayerId.getGame().gamePlayer)); // salvo
         return gameMapSet;
     }
+
 
     @RequestMapping("/games") // see all games and the related information
     // this method is called when someone requests /games
@@ -184,10 +198,12 @@ public class SalvoController {
 
     }
 
-
-//$.post("/getGamePlayerID", { gameId: 2, playerId: 1 }).done(function() { console.log("success"); })
-
-
+    private Map<String, Object> makeMapforError(String status, String value) {
+        Map<String, Object> errorMap = new HashMap<>();
+        errorMap.put("status", status);
+        errorMap.put("message", value);
+        return errorMap;
+    }
 
 
 

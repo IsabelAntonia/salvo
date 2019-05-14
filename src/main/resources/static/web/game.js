@@ -12,7 +12,9 @@
                 thisPlayerSalvoes: {},
                 allSalvoPlayerLocations: [],
                 allSalvoOpponentLocations: [],
-                opponentSalvoes: {}
+                opponentSalvoes: {},
+
+
             },
             beforeCreate() {
                 let url = new URLSearchParams(window.location.search);
@@ -21,17 +23,33 @@
                     .then(response => response.json())
                     .then(json => {
                         this.data = json;
-                        this.thisPlayer = this.data.thisPlayer.playerEmail;
-                        this.thisPlayerId = this.data.thisPlayer.playerId;
-                        this.players = this.data.Info.gamePlayers;
-                        this.findOpponent();
-                        this.displayGrid();
-                        this.displayShips(this.data);
-                        this.identifySalvoes(this.data)
+                        if (this.data.status === "Error") {
 
-                        console.log(this.data);
+                            alert(this.data.message)
+
+                        } else {
+
+                            console.log(this.data)
+                            this.thisPlayer = this.data.thisPlayer.playerEmail;
+                                                                    this.thisPlayerId = this.data.thisPlayer.playerId;
+                                                                    this.players = this.data.Info.gamePlayers;
+                                                                    this.findOpponent();
+                                                                    this.displayGrid();
+                                                                    this.displayShips(this.data);
+                                                                    this.identifySalvoes(this.data);
+
+
+
+                        }
+
+
+
                     })
+
             },
+
+
+
 
             methods: {
 
@@ -64,10 +82,8 @@
                     for (var i = 0; i < data.Salvoes.length; i++) {
                         if (data.thisPlayer.gamePlayerId == Object.keys(data.Salvoes[i])) {
                             this.thisPlayerSalvoes = data.Salvoes[i];
-                        }
-
-                        else {
-                        this.opponentSalvoes = data.Salvoes[i];
+                        } else {
+                            this.opponentSalvoes = data.Salvoes[i];
                         }
                     }
                     this.displayPlayerSalvoes(this.thisPlayerSalvoes);
@@ -76,19 +92,19 @@
 
                 },
 
-                showHits(salvoes){
+                showHits(salvoes) {
 
-                 let myObj = salvoes[this.opponentId];
-                                    for (var i = 0; i < myObj.length; i++) {
-                                        this.allSalvoOpponentLocations.push(myObj[i].Locations);
-                                    }
-                                    this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
+                    let myObj = salvoes[this.opponentId];
+                    for (var i = 0; i < myObj.length; i++) {
+                        this.allSalvoOpponentLocations.push(myObj[i].Locations);
+                    }
+                    this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
 
-                                    for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
+                    for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
 
-                                    hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
-                                    hitCell.style.backgroundColor = 'black';
-                                   }
+                        hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
+                        hitCell.style.backgroundColor = 'black';
+                    }
 
 
 
@@ -103,10 +119,10 @@
                     this.allSalvoPlayerLocations = this.allSalvoPlayerLocations.flat();
 
                     for (let j = 0; j < this.allSalvoPlayerLocations.length; j++) {
-                    var className = this.allSalvoPlayerLocations[j];
-                    shotCell = document.getElementsByClassName(className)[0];
-                    shotCell.style.backgroundColor = 'red';
-                   }
+                        var className = this.allSalvoPlayerLocations[j];
+                        shotCell = document.getElementsByClassName(className)[0];
+                        shotCell.style.backgroundColor = 'red';
+                    }
                 },
 
                 displayGrid() {
@@ -172,12 +188,15 @@
 
                 },
                 logout() {
-                    $.post("/api/logout").done(function(){
+                    $.post("/api/logout").done(function () {
 
-                       location.replace(`http://localhost:8080/web/games.html`);
+                        location.replace(`http://localhost:8080/web/games.html`);
 
                     })
 
                 }
+
+
+
             }
         })
