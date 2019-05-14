@@ -263,11 +263,9 @@ var playerId = data.currentUser.playerId;
 
                pathVar = response;
 
-         for (var i = 0; i < this.linkedGamesArray.length; i++){
+               location.replace(`http://localhost:8080/web/game.html?gp=`+pathVar);
 
-              this.linkedGamesArray[i].setAttribute("href","game.html?gp="+pathVar)
 
-              }
 
                })
 }
