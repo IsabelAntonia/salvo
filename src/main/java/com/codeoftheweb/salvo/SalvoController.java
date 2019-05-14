@@ -183,10 +183,26 @@ public class SalvoController {
         }
     }
 
+    @RequestMapping(value = "/games", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> createGame(
+            Authentication authentication) {
+
+        if (authentication != null) {
+            Game game = new Game();
+            gameRepository.save(game);
+            GamePlayer gamePlayer = new GamePlayer(game, authenticatedUser(authentication));
+            gamePlayerRepository.save(gamePlayer);
+            return new ResponseEntity<>(createMapForGameCreation("gpid", gamePlayer.getId()), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(makeMapforError("Error","Login to create a game!"),HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
     @RequestMapping (value = "/getGamePlayerID", method = RequestMethod.POST)
 
     private Long returnCorrectGamePlayerId(@RequestParam long gameId,
-                                     @RequestParam long playerId) {
+                                           @RequestParam long playerId) {
      return customFunc(gameRepository.findById(gameId), playerId);
 
 
@@ -203,6 +219,12 @@ public class SalvoController {
         errorMap.put("status", status);
         errorMap.put("message", value);
         return errorMap;
+    }
+
+    private Map<String, Object> createMapForGameCreation(String key, Object value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(key, value);
+        return map;
     }
 
 

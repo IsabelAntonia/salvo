@@ -279,6 +279,25 @@ var vm = new Vue({
 
 
                 })
+        },
+
+        createGame(){
+
+             $.post("/api/games")
+              .done(res => {
+
+              console.log(res.gpid)
+              var pathVar = res.gpid
+              location.replace(`http://localhost:8080/web/game.html?gp=` + pathVar);
+              })
+
+
+
+              .fail(res=> {
+              alert(res.responseJSON.message)
+              console.log(res)
+              })
+
         }
     }
 
