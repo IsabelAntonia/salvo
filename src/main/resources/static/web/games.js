@@ -10,7 +10,10 @@ var vm = new Vue({
         linkedGames: [],
         notLinkedGames: [],
         reenterPos: false,
-        linkedGamesArray: []
+        linkedGamesArray: [],
+        joinableGames: [],
+        fullGames: []
+
 
 
 
@@ -23,7 +26,7 @@ var vm = new Vue({
             .then(response => {
 
                 data = response;
-                console.log(response)
+                console.log(data)
 
                 this.games = data.games;
 
@@ -238,9 +241,39 @@ var vm = new Vue({
 
                 }
 
+                         for (var i = 0; i < this.notLinkedGames.length; i++) { // checking if there is only one player
+
+                                    for (var j = 0; j < this.notLinkedGames[i].gamePlayers.length; j++) {
+
+                                        if (this.notLinkedGames[i].gamePlayers.length === 1) {
+
+
+
+                                                if (!this.joinableGames.includes(this.notLinkedGames[i])) { // checking if the game is not already in the list
+                                                    this.joinableGames.push(this.notLinkedGames[i]);
+
+                                                }
+
+
+                                        }
+
+                                        else {
+
+                                        if (!this.fullGames.includes(this.notLinkedGames[i])){
+
+                                        this.fullGames.push(this.notLinkedGames[i]);
+                                        }
+
+
+                                        }
+                                    }
+
+
+                                }
+
             } else {
 
-                this.notLinkedGames = data.games;
+                this.fullGames = data.games;
 
             }
 
@@ -298,7 +331,21 @@ var vm = new Vue({
               console.log(res)
               })
 
-        }
+        },
+            joinGame() {
+                var gameId = event.target.id;
+                $.post("/api/game/gameId/players")
+                .done(res => {
+                    console.log(res.gpid);
+                    var pathVar = res.gpid;
+                    location.replace(`http://localhost:8080/web/game.html?gp=` + pathVar);
+
+                })
+            }
+
+
+
+
     }
 
 

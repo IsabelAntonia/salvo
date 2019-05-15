@@ -34,15 +34,28 @@
 
         <hr v-if="reenterPos">
 
-        <p v-if="reenterPos">Or join a new game, that is looking for a player!</p>
+        <p v-if="reenterPos">Here are all other games. Join a game that is looking for a player or create a new game!</p>
 
-        <div v-for="game in notLinkedGames">
+        <div v-for="game in fullGames">
             <ol>
                 <li>GameId: {{game.GameId}}</li>
                 <li>creationDate: {{game.creationDate}}</li>
                 <li>GamePlayers: {{game.gamePlayers}}</li>
+
             </ol>
         </div>
+
+        <div v-for="game in joinableGames">
+            <ol>
+                <li>GameId: {{game.GameId}}</li>
+                <li>creationDate: {{game.creationDate}}</li>
+                <li>GamePlayers: {{game.gamePlayers}}</li>
+                <li><button :id = "game.GameId" @click="joinGame()">Join Game {{game.GameId}}</button></li>
+
+            </ol>
+        </div>
+
+
 
         <hr>
 
