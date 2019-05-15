@@ -46,6 +46,46 @@ public class SalvoController {
         }
     }
 
+    @RequestMapping("/game/{mm}/players")
+    public ResponseEntity<Map<String, Object>> joinGame(@PathVariable long mm, Authentication authentication) {
+        if (authentication != null) {
+
+            if (gameRepository.findById(mm) ==  null) {// check if game exists
+                return new ResponseEntity<>(makeMapforError("Error","No such game"),HttpStatus.BAD_REQUEST);
+
+            }
+
+            else {
+
+                Game game = gameRepository.findById(mm);
+                if (game.getNumberOfPlayers() == 2){ // check if game is full
+                    return new ResponseEntity<>(makeMapforError("Error","Game is full"),HttpStatus.BAD_REQUEST);
+                }
+
+                else {
+
+                    GamePlayer presentGamePlayer = game.gamePlayer.iterator().next();
+
+                    if (presentGamePlayer.getPlayer() == authenticatedUser(authentication)) { // check if i am the one gameplayer
+                        return new ResponseEntity<>(makeMapforError("Error","You are already a player in this game"),HttpStatus.BAD_REQUEST);
+                    }
+
+                    else {
+                        GamePlayer gamePlayer = new GamePlayer(game, authenticatedUser(authentication));
+                        gamePlayerRepository.save(gamePlayer);
+                        return new ResponseEntity<>(createMapForGameCreation("gpid", gamePlayer.getId()), HttpStatus.CREATED);
+                    }
+                }
+            }
+
+
+        } else {
+            return new ResponseEntity<>(makeMapforError("Error","Login to join a game!"),HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
+
     public Map<String, Object> findgamePlayer(Long nn) {
         Map<String, Object> gameMapSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
@@ -204,8 +244,6 @@ public class SalvoController {
     private Long returnCorrectGamePlayerId(@RequestParam long gameId,
                                            @RequestParam long playerId) {
      return customFunc(gameRepository.findById(gameId), playerId);
-
-
     }
 
     private Long customFunc(Game game, Long playerId){

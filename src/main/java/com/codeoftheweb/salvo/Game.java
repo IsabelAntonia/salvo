@@ -15,7 +15,6 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
     @OneToMany(mappedBy="game", fetch= FetchType.EAGER)
     Set<GamePlayer> gamePlayer;
 
@@ -64,6 +63,15 @@ public class Game {
         }
         return null;
     }
+
+
+    public long getNumberOfPlayers(){
+        if (this.gamePlayer.size() == 2 ){
+            return 2;
+        }
+        return 1;
+    }
+
 
 
 

@@ -334,13 +334,19 @@ var vm = new Vue({
         },
             joinGame() {
                 var gameId = event.target.id;
-                $.post("/api/game/gameId/players")
+                console.log(gameId)
+
+                $.post(`/api/game/${gameId}/players`)
                 .done(res => {
                     console.log(res.gpid);
                     var pathVar = res.gpid;
                     location.replace(`http://localhost:8080/web/game.html?gp=` + pathVar);
 
                 })
+                 .fail(res=> {
+                              alert(res.responseJSON.message)
+                              console.log(res)
+                              })
             }
 
 
