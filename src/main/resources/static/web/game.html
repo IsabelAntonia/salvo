@@ -21,28 +21,42 @@
 <body>
 <div id="vueApp">
 
+
     <button @click="logout()">Logout</button>
     <button @click="location.href='games.html';">All games</button>
 
+    <h1 v-if="!placeShips">{{thisPlayer}} (you) vs. {{opponent}}</h1>
 
+    <h2 v-if="placeShips">It is time to place your ships,  {{thisPlayer}}!</h2>
 
-    <h1>{{thisPlayer}} (you) vs. {{opponent}}</h1>
-
+    <place-ships v-if="placeShips"></place-ships>
     <h2>Your Field</h2>
-    <table id="table"></table>
+    <table cellspacing="0" id="table"></table>
+
+
+    <div v-if="!placeShips">
+
+
     <br>
     <br>
     <h2>Battlefield of opponent displaying your salvoes!</h2>
-    <table id="tableSalvo"></table>
+    <table cellspacing="0" id="tableSalvo"></table>
+
+    </div>
+
+    <button v-if="placeShips">Done placing ships</button>
+
+    </div>
 
 
-
-</div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
 <script src="game.js"></script>
+<script src="placeShips.js"></script>
+
+
 </body>
 
 </html>

@@ -13,6 +13,9 @@
                 allSalvoPlayerLocations: [],
                 allSalvoOpponentLocations: [],
                 opponentSalvoes: {},
+                // States
+                placeShips : false
+
 
 
             },
@@ -31,24 +34,37 @@
 
                             console.log(this.data)
                             this.thisPlayer = this.data.thisPlayer.playerEmail;
-                                                                    this.thisPlayerId = this.data.thisPlayer.playerId;
-                                                                    this.players = this.data.Info.gamePlayers;
-                                                                    this.findOpponent();
-                                                                    this.displayGrid();
-                                                                    this.displayShips(this.data);
-                                                                    this.identifySalvoes(this.data);
+                            this.thisPlayerId = this.data.thisPlayer.playerId;
+                            this.players = this.data.Info.gamePlayers;
 
+
+                            // evaluating State
+
+
+
+                            if (this.data.Ships.length === 0){
+                            this.placeShips = true;
+                            }
+
+                            else {
+
+                            this.findOpponent();
+                            this.displayShips(this.data);
+                            this.identifySalvoes(this.data);
+
+                            }
 
 
                         }
-
-
 
                     })
 
             },
 
+            mounted(){
+            this.displayGrid();
 
+            },
 
 
             methods: {
@@ -128,6 +144,7 @@
                 displayGrid() {
 
                     var table = document.getElementById("table");
+                    console.log(table)
                     var tableSalvo = document.getElementById("tableSalvo");
 
                     var tHead = document.createElement("thead");
@@ -187,6 +204,8 @@
                     }
 
                 },
+
+
                 logout() {
                     $.post("/api/logout").done(function () {
 
