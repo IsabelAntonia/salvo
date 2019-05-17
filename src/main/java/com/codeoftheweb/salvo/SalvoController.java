@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -27,6 +28,9 @@ public class SalvoController {
     @Autowired
     private GameRepository gameRepository;
 
+   @Autowired
+   private ShipRepository shipRepository;
+
     @RequestMapping("/leaderboard")
     public List<Object> getLeaderboardMap() {
         return playerRepository.findAll().stream().map(player -> createLeaderboardMap(player)).collect(toList());
@@ -42,7 +46,7 @@ public class SalvoController {
         }
 
         else {
-            return new ResponseEntity<>(makeMapforError("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(makeMapforStatus("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -51,7 +55,7 @@ public class SalvoController {
         if (authentication != null) {
 
             if (gameRepository.findById(mm) ==  null) {// check if game exists
-                return new ResponseEntity<>(makeMapforError("Error","No such game"),HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(makeMapforStatus("Error","No such game"),HttpStatus.BAD_REQUEST);
 
             }
 
@@ -59,7 +63,7 @@ public class SalvoController {
 
                 Game game = gameRepository.findById(mm);
                 if (game.getNumberOfPlayers() == 2){ // check if game is full
-                    return new ResponseEntity<>(makeMapforError("Error","Game is full"),HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(makeMapforStatus("Error","Game is full"),HttpStatus.BAD_REQUEST);
                 }
 
                 else {
@@ -67,7 +71,7 @@ public class SalvoController {
                     GamePlayer presentGamePlayer = game.gamePlayer.iterator().next();
 
                     if (presentGamePlayer.getPlayer() == authenticatedUser(authentication)) { // check if i am the one gameplayer
-                        return new ResponseEntity<>(makeMapforError("Error","You are already a player in this game"),HttpStatus.BAD_REQUEST);
+                        return new ResponseEntity<>(makeMapforStatus("Error","You are already a player in this game"),HttpStatus.BAD_REQUEST);
                     }
 
                     else {
@@ -80,7 +84,7 @@ public class SalvoController {
 
 
         } else {
-            return new ResponseEntity<>(makeMapforError("Error","Login to join a game!"),HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(makeMapforStatus("Error","Login to join a game!"),HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -234,7 +238,7 @@ public class SalvoController {
             gamePlayerRepository.save(gamePlayer);
             return new ResponseEntity<>(createMapForGameCreation("gpid", gamePlayer.getId()), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(makeMapforError("Error","Login to create a game!"),HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(makeMapforStatus("Error","Login to create a game!"),HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -252,7 +256,7 @@ public class SalvoController {
 
     }
 
-    private Map<String, Object> makeMapforError(String status, String value) {
+    private Map<String, Object> makeMapforStatus(String status, String value) {
         Map<String, Object> errorMap = new HashMap<>();
         errorMap.put("status", status);
         errorMap.put("message", value);
@@ -265,6 +269,38 @@ public class SalvoController {
         return map;
     }
 
+    @RequestMapping (value ="/games/players/{gpid}/ships", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> addPlacedShips(@PathVariable long gpid, @RequestBody Set<Ship> newShip, Authentication authentication) {
+        GamePlayer gP = gamePlayerRepository.findById(gpid);
+        if (authentication != null) {
+
+            if (gP.getPlayer() != authenticatedUser(authentication)){ // authenticated user has to be gpid
+                return new ResponseEntity<>(makeMapforStatus("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
+            }
+            else {
+
+                if(authentication != null){ // check if user has not already placed ships
+                    for (Ship ship : newShip){
+                        gP.addShip(ship);
+                        shipRepository.save(ship);
+                    }
+                    return new ResponseEntity<>(makeMapforStatus("Success", "New Ship added!"),HttpStatus.CREATED);
+                }
+
+                else {
+                    return new ResponseEntity<>(makeMapforStatus("Error", "You already placed ships!"), HttpStatus.FORBIDDEN);
+
+                }
+
+            }
+        }
+
+
+
+        else {
+            return new ResponseEntity<>(makeMapforStatus("Error","Login to place ships!"),HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
 }

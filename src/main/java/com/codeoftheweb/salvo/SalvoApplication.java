@@ -42,7 +42,7 @@ public class SalvoApplication {
             Player player2 = new Player("chloe@gmail.com", "kjhdfj2");
             Player player3 = new Player("kim@gmail.com", "bvkraf34");
             Player player4 = new Player("david@gmail.com", "vwhthb");
-            Player player5 = new Player("michaelle@gmail.com", "vnjiu56");
+            Player player5 = new Player("michaelle@gmail.com", "1");
 
             playerRepository.save(player1); // save the instance in the database
             playerRepository.save(player2);
@@ -185,6 +185,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
                 .antMatchers("/api/leaderboard").permitAll()
+                .antMatchers("/api/games/players/*/ships").permitAll()
                 .antMatchers("/api/players").permitAll()
                 .antMatchers("/web/game.html").authenticated()
                 .antMatchers("/web/game.js").authenticated()

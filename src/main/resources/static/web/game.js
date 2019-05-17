@@ -36,6 +36,7 @@
                             this.thisPlayer = this.data.thisPlayer.playerEmail;
                             this.thisPlayerId = this.data.thisPlayer.playerId;
                             this.players = this.data.Info.gamePlayers;
+                            this.thisGamePlayerId = this.data.thisPlayer.gamePlayerId
 
 
                             // evaluating State
@@ -69,6 +70,38 @@
 
             methods: {
 
+
+             postShip() {
+                   let type1 = "Patrol Boat"
+                   let location1 = ['H2','H3']
+                   let location2 = ['A3','A4','A5']
+                   let type2 = "Aircraft Carrier"
+                   let gpid = this.thisGamePlayerId
+
+
+
+                                $.post({
+                                        url: `/api/games/players/${gpid}/ships`,
+                                        data: JSON.stringify([
+                                        {
+                                            type: type1,
+                                            location: location1
+                                        },
+
+                                        {
+                                            type: type2,
+                                            location: location2
+                                        }]),
+
+                                        dataType: "text",
+                                        contentType: "application/json"
+                                    })
+                                    .done(res => {
+                                        console.log(res)
+                                        location.reload();
+                                    })
+                                    .fail(err => console.log(err))
+                 },
                 findOpponent() {
 
                     for (var i = 0; i < this.players.length; i++) {
@@ -144,7 +177,7 @@
                 displayGrid() {
 
                     var table = document.getElementById("table");
-                    console.log(table)
+
                     var tableSalvo = document.getElementById("tableSalvo");
 
                     var tHead = document.createElement("thead");
