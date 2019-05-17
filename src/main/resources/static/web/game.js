@@ -4,7 +4,7 @@
                 data: [],
                 opponent: ' ',
                 thisPlayer: ' ',
-                thisGamePlayerId: 0,
+                thisGamePlayerId: null,
                 thisPlayerId: 0,
                 opponentId: 0,
                 thisPlayers: [],
@@ -13,8 +13,12 @@
                 allSalvoPlayerLocations: [],
                 allSalvoOpponentLocations: [],
                 opponentSalvoes: {},
-                // States
-                placeShips : false
+                placeShips : false,
+                dragAirLocations: [],
+                dragBatLocations: [],
+                dragSubLocations: [],
+                dragDesLocations: [],
+                dragPatLocations: []
 
 
 
@@ -74,8 +78,23 @@
              postShip() {
                    let type1 = "Patrol Boat"
                    let location1 = ['H2','H3']
-                   let location2 = ['A3','A4','A5']
+
                    let type2 = "Aircraft Carrier"
+                   let location2 = ['A3','A4','A5']
+
+                   let type3 = "Aircraft Carrier"
+                   let location3 = ['B3','B4','B5']
+
+                   let type4 = "Aircraft Carrier"
+                   let location4 = ['C3','C4','C5']
+
+                   let type5 = "Aircraft Carrier"
+                   let location5 = ['D3','D4','D5']
+
+                   let type6 = "Aircraft Carrier"
+                   let location6 = ['E3','E4','E5']
+
+
                    let gpid = this.thisGamePlayerId
 
 
@@ -91,7 +110,31 @@
                                         {
                                             type: type2,
                                             location: location2
-                                        }]),
+                                        },
+
+                                          {
+                                            type: type3,
+                                            location: location3
+                                        },
+
+                                          {
+                                             type: type4,
+                                             location: location4
+                                        },
+
+                                           {
+                                            type: type5,
+                                            location: location5
+                                          },
+
+                                            {
+                                            type: type6,
+                                            location: location6
+                                          }
+
+
+
+                                        ]),
 
                                         dataType: "text",
                                         contentType: "application/json"
@@ -230,8 +273,8 @@
                             table.rows.item(j).childNodes[i].id = table.rows.item(j).childNodes[0].innerHTML + numbers[i]
                             tableSalvo.rows.item(j).childNodes[i].className = tableSalvo.rows.item(j).childNodes[0].innerHTML + numbers[i]
 
-                            table.rows.item(j).childNodes[i].innerHTML = table.rows.item(j).childNodes[i].id;
-                            tableSalvo.rows.item(j).childNodes[i].innerHTML = tableSalvo.rows.item(j).childNodes[i].className;
+//                            table.rows.item(j).childNodes[i].innerHTML = table.rows.item(j).childNodes[i].id;
+//                            tableSalvo.rows.item(j).childNodes[i].innerHTML = tableSalvo.rows.item(j).childNodes[i].className;
                         }
 
                     }
@@ -246,8 +289,46 @@
 
                     })
 
-                }
+                },
 
+                   drop(ev) {
+                      if (event.target.id.length === 0) {
+                        console.log("You can not drop a ship here.");
+                      } else {
+                        console.log(this.dragAirLocations.includes(event.target.id));
+                        console.log(event.target.id);
+                        if (event.target.id === "dragAir") {
+                          console.log("Ships can not overlap.");
+                        } else {
+                          ev.preventDefault();
+                          var data = ev.dataTransfer.getData("text");
+                          document.getElementById(data).style.width = "40px";
+                          document.getElementById(data).style.color = "red";
+                          event.target.appendChild(document.getElementById(data)); // red one
+
+                          if (document.getElementById(data).id === "dragAir") {
+                            this.dragAirLocations = [];
+                            this.dragAirLocations.push(event.target.id);
+                            this.dragAirLocations.push(event.target.nextElementSibling.id);
+                          } else if (document.getElementById(data).id === "dragDes") {
+                            this.dragDesLocations = [];
+                            this.dragDesLocations.push(event.target.id);
+                            this.dragDesLocations.push(event.target.nextElementSibling.id);
+                          }
+
+                          console.log(this.dragAirLocations);
+                          console.log(this.dragDesLocations);
+                        }
+                      }
+                    },
+
+                    allowDrop(ev) {
+                      ev.preventDefault();
+                    },
+
+                    drag(ev) {
+                      ev.dataTransfer.setData("text", ev.target.id);
+                    }
 
 
             }

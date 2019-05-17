@@ -1,36 +1,57 @@
   td {
-	    width: 50px;
-	    height: 50px;
-	    text-align: center;
-        border: 1px solid black;
-	}
-
-	td:hover {
-	background-color: grey;
-	}
-
-	input {
-	border: 1px solid black;
-	}
-
-	.form > div {
-
-	  width: 50px;
-      height: 50px;
-      display: inline-block;
+      width: 40px;
+      height: 40px;
+      text-align: center;
       border: 1px solid black;
-	}
-
-	.form {
-	font-size: 0 !important;
-	}
+  }
 
 
-	section {
-	margin-bottom: 40px;
-	}
+  input {
+      border: 1px solid black;
+  }
+
+  section {
+      margin-bottom: 30px;
+  }
 
 
-	.bigShips, .smallShips {
-	display: flex;
-	}
+  .bigShips,
+  .smallShips {
+      display: flex;
+  }
+
+  #table {
+      display: inline-table;
+      table-layout: fixed;
+  }
+
+
+  .form {
+
+      font-size: small;
+      background-color: red;
+      height: 40px;
+      text-align: center;
+      width: 40px;
+      cursor: pointer;
+
+  }
+
+
+  #dragAir:after {
+      content: '';
+      position: relative;
+      left: 40px;
+      top: -15px;
+      border-style: solid;
+      border-width: 25px 175px 15px 0;
+      border-color: red;
+      display: block;
+      width: 0;
+      cursor: default !important;
+  }
+
+  ul {
+      border: 1px solid black;
+      padding: 10px 100px;
+  }

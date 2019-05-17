@@ -279,7 +279,11 @@ public class SalvoController {
             }
             else {
 
-                if(authentication != null){ // check if user has not already placed ships
+                if(gP.ships.size() > 5 || newShip.size() > 5){ // check if user has not already placed ships
+                    return new ResponseEntity<>(makeMapforStatus("Error", "You can not place more than 5 ships!"), HttpStatus.FORBIDDEN);
+                }
+
+                else {
                     for (Ship ship : newShip){
                         gP.addShip(ship);
                         shipRepository.save(ship);
@@ -287,15 +291,8 @@ public class SalvoController {
                     return new ResponseEntity<>(makeMapforStatus("Success", "New Ship added!"),HttpStatus.CREATED);
                 }
 
-                else {
-                    return new ResponseEntity<>(makeMapforStatus("Error", "You already placed ships!"), HttpStatus.FORBIDDEN);
-
-                }
-
             }
         }
-
-
 
         else {
             return new ResponseEntity<>(makeMapforStatus("Error","Login to place ships!"),HttpStatus.UNAUTHORIZED);
