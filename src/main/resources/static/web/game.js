@@ -18,7 +18,10 @@ var app = new Vue({
     dragBatLocations: [],
     dragSubLocations: [],
     dragDesLocations: [],
-    dragPatLocations: []
+    dragPatLocations: [],
+    firstSalvo: false,
+    salvoesToSend: []
+
   },
   beforeCreate() {
     let url = new URLSearchParams(window.location.search);
@@ -40,10 +43,16 @@ var app = new Vue({
 
           if (this.data.Ships.length === 0) {
             this.placeShips = true;
-          } else {
+          }
+
+          else {
             this.findOpponent();
             this.displayShips(this.data);
             this.identifySalvoes(this.data);
+
+
+            if (this.thisPlayerSalvoes[this.thisGamePlayerId].length === 0){this.firstSalvo = true;}
+
           }
         }
       });
@@ -54,6 +63,60 @@ var app = new Vue({
   },
 
   methods: {
+
+      postSalvo() {
+        if (this.salvoesToSend.length != 5) {
+          alert("You have to select exactly 5 cells to proceed!");
+        } else {
+
+
+          let turn = 1;
+          let gpid = this.thisGamePlayerId;
+
+
+
+       $.post({
+            url: `/api/games/players/${gpid}/salvoes`,
+            data: JSON.stringify(
+              {
+                turn: turn,
+                location: this.salvoesToSend
+
+              }
+            ),
+
+            dataType: "text",
+            contentType: "application/json"
+          })
+            .done(res => {
+              console.log(res);
+              location.reload();
+            })
+            .fail(err => console.log(err));
+        }
+      },
+
+      selectShot() {
+        if (event.target.className.length === 0) { // checking if inside grid
+          alert("You can only select cells inside the grid!");
+        } else {
+          if (this.salvoesToSend.includes(event.target.className)) { // checking if i have to remove it
+            this.salvoesToSend = this.salvoesToSend.filter(element => {
+              // remove event target
+              return element !== event.target.className;
+            });
+            event.target.style.backgroundColor = "white";
+          } else {
+            if (this.salvoesToSend.length > 4) { // checking if more than 5
+              alert("You can not select more than 5 cells!");
+            } else {
+              event.target.style.backgroundColor = "yellow";
+              this.salvoesToSend.push(event.target.className);
+            }
+          }
+        }
+      },
+
     postShip() {
       if (
         this.dragDesLocations.length === 0 ||
@@ -153,7 +216,9 @@ var app = new Vue({
     },
 
     showHits(salvoes) {
+
       let myObj = salvoes[this.opponentId];
+      if (myObj != null){
       for (var i = 0; i < myObj.length; i++) {
         this.allSalvoOpponentLocations.push(myObj[i].Locations);
       }
@@ -162,7 +227,7 @@ var app = new Vue({
       for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
         hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
         hitCell.style.backgroundColor = "black";
-      }
+      }}
     },
 
     displayPlayerSalvoes(salvoes) {

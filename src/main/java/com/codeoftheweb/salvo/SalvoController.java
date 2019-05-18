@@ -31,6 +31,9 @@ public class SalvoController {
    @Autowired
    private ShipRepository shipRepository;
 
+   @Autowired
+   private SalvoRepository salvoRepository;
+
     @RequestMapping("/leaderboard")
     public List<Object> getLeaderboardMap() {
         return playerRepository.findAll().stream().map(player -> createLeaderboardMap(player)).collect(toList());
@@ -298,6 +301,54 @@ public class SalvoController {
             return new ResponseEntity<>(makeMapforStatus("Error","Login to place ships!"),HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @RequestMapping (value ="/games/players/{gpid}/salvoes", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> addSalvoes(@PathVariable long gpid, @RequestBody Salvo salvo, Authentication authentication) {
+        GamePlayer gP = gamePlayerRepository.findById(gpid);
+        if (authentication != null) {
+
+            if (gP.getPlayer() != authenticatedUser(authentication)){ // authenticated user has to be gpid
+                return new ResponseEntity<>(makeMapforStatus("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
+            }
+            else {
+
+                List <Integer> allTurns = gP.salvoes.stream().map(singleSalvo -> singleSalvo.getTurn()).collect(toList());
+           if (allTurns.contains(salvo.getTurn())){
+               return new ResponseEntity<>(makeMapforStatus("Error", "You fired already in this turn!"), HttpStatus.FORBIDDEN);
+           } // the user has already submitted a salvo for the turn listed
+           else {
+               salvoRepository.save(salvo);
+               gP.addSalvo(salvo);
+               return new ResponseEntity<>(makeMapforStatus("Success", "Salvo was fired!"),HttpStatus.CREATED);
+           }
+
+            }
+        }
+
+        else {
+            return new ResponseEntity<>(makeMapforStatus("Error","Login to place ships!"),HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+/*    @RequestMapping (value ="/games/players/{gpid}/salvoes", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> addSalvoes(@PathVariable long gpid, @RequestBody Salvo salvo, Authentication authentication) {
+        GamePlayer gP = gamePlayerRepository.findById(gpid);
+        if (authentication != null) {
+
+            if (gP.getPlayer() != authenticatedUser(authentication)){ // authenticated user has to be gpid
+                return new ResponseEntity<>(makeMapforStatus("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
+            }
+                else {
+                    gP.addSalvo(salvo);
+                    salvoRepository.save(salvo);
+                    return new ResponseEntity<>(makeMapforStatus("Success", "Salvo was fired!"),HttpStatus.CREATED);
+                }
+        }
+
+        else {
+            return new ResponseEntity<>(makeMapforStatus("Error","Login to place ships!"),HttpStatus.UNAUTHORIZED);
+        }
+    }*/
 
 
 }

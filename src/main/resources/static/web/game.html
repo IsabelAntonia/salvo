@@ -28,8 +28,22 @@
     <h1 v-if="!placeShips">{{thisPlayer}} (you) vs. {{opponent}}</h1>
 
     <h2 v-if="placeShips">It is time to place your ships,  {{thisPlayer}}!</h2>
+    <h2 v-if="firstSalvo">It is time to fire your first salvo!</h2>
 
-
+<div v-if="!placeShips">
+    <section>
+        <ul>
+            <li>A salvo is compromised of 5 shots, hence you can select 5 cells.</li>
+            <li>It is your goal to hit a cell where your opponent has placed a ship.</li>
+            <li>Select a cell by clicking on it.</li>
+            <li>Click again on the cell if you want to unselect it.</li>
+            <li>Cells you already fired on in previous turns are not selectable.
+                <span v-if="firstSalvo">Since this is your first turn you can select any cell.</span>
+            </li>
+            <li>When you are happy with the cells you selected, click Done.</li>
+        </ul>
+    </section>
+</div>
 
     <div v-if="placeShips">
         <section>
@@ -109,7 +123,8 @@
     <br>
     <br>
     <h2>Battlefield of opponent displaying your salvoes!</h2>
-    <table cellspacing="0" id="tableSalvo"></table>
+    <table @click="selectShot()" cellspacing="0" id="tableSalvo"></table>
+        <button @click="postSalvo()">Done placing Salvoes</button>
 
     </div>
 

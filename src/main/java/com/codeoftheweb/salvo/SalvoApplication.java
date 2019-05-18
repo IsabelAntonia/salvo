@@ -98,10 +98,6 @@ public class SalvoApplication {
 	/*		Score score3 = new Score(0.5, game3, player5);
 			Score score4 = new Score(0.5, game3, player2);*/
 
-
-
-
-
             gamePlayerRepository.save(gamePlayer1);
             gamePlayerRepository.save(gamePlayer2);
             gamePlayerRepository.save(gamePlayer3);
@@ -116,7 +112,6 @@ public class SalvoApplication {
             gamePlayer1.addSalvo(salvo1);
             gamePlayer1.addSalvo(salvo2);
             gamePlayer2.addSalvo(salvo3);
-
 
             shipRepository.save(ship1);
             shipRepository.save(ship2);
@@ -186,6 +181,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/api/leaderboard").permitAll()
                 .antMatchers("/api/games/players/*/ships").permitAll()
+                .antMatchers("/api/games/players/*/salvoes").permitAll()
                 .antMatchers("/api/players").permitAll()
                 .antMatchers("/web/game.html").authenticated()
                 .antMatchers("/web/game.js").authenticated()
