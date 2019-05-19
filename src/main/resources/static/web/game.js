@@ -20,7 +20,8 @@ var app = new Vue({
     dragDesLocations: [],
     dragPatLocations: [],
     firstSalvo: false,
-    salvoesToSend: []
+    salvoesToSend: [],
+    thisPlayerTurn: null
 
   },
   beforeCreate() {
@@ -39,7 +40,6 @@ var app = new Vue({
           this.players = this.data.Info.gamePlayers;
           this.thisGamePlayerId = this.data.thisPlayer.gamePlayerId;
 
-          // evaluating State
 
           if (this.data.Ships.length === 0) {
             this.placeShips = true;
@@ -52,6 +52,11 @@ var app = new Vue({
 
 
             if (this.thisPlayerSalvoes[this.thisGamePlayerId].length === 0){this.firstSalvo = true;}
+            if (!this.firstSalvo){
+
+             let lengthOfSalvoes = this.thisPlayerSalvoes[this.thisGamePlayerId].length
+             this.thisPlayerTurn = this.thisPlayerSalvoes[this.thisGamePlayerId][lengthOfSalvoes - 1].turn;}
+
 
           }
         }
@@ -64,58 +69,63 @@ var app = new Vue({
 
   methods: {
 
-      postSalvo() {
-        if (this.salvoesToSend.length != 5) {
-          alert("You have to select exactly 5 cells to proceed!");
+    postSalvo() {
+      if (this.salvoesToSend.length != 5) {
+        alert("You have to select exactly 5 cells to proceed!");
+      } else {
+        console.log(this.firstSalvo);
+        if (this.firstSalvo) {
+          var turn = 1;
         } else {
-
-
-          let turn = 1;
-          let gpid = this.thisGamePlayerId;
-
-
-
-       $.post({
-            url: `/api/games/players/${gpid}/salvoes`,
-            data: JSON.stringify(
-              {
-                turn: turn,
-                location: this.salvoesToSend
-
-              }
-            ),
-
-            dataType: "text",
-            contentType: "application/json"
-          })
-            .done(res => {
-              console.log(res);
-              location.reload();
-            })
-            .fail(err => console.log(err));
+          var turn = this.thisPlayerTurn + 1;
         }
-      },
+        let gpid = this.thisGamePlayerId;
 
-      selectShot() {
-        if (event.target.className.length === 0) { // checking if inside grid
-          alert("You can only select cells inside the grid!");
+        console.log(turn);
+
+        $.post({
+          url: `/api/games/players/${gpid}/salvoes`,
+          data: JSON.stringify({
+            turn: turn,
+            location: this.salvoesToSend
+          }),
+
+          dataType: "text",
+          contentType: "application/json"
+        })
+          .done(res => {
+            console.log(res);
+            location.reload();
+          })
+          .fail(err => console.log(err));
+      }
+    },
+
+    selectShot() {
+      if (event.target.className.length === 0) {
+        // checking if inside grid
+        alert("You can only select cells inside the grid!");
+      } else {
+        if (this.salvoesToSend.includes(event.target.className)) {
+          // checking if i have to remove it
+          this.salvoesToSend = this.salvoesToSend.filter(element => {
+            // remove event target
+            return element !== event.target.className;
+          });
+          event.target.style.backgroundColor = "white";
         } else {
-          if (this.salvoesToSend.includes(event.target.className)) { // checking if i have to remove it
-            this.salvoesToSend = this.salvoesToSend.filter(element => {
-              // remove event target
-              return element !== event.target.className;
-            });
-            event.target.style.backgroundColor = "white";
+          if (this.salvoesToSend.length > 4) {
+            // checking if more than 5
+            alert("You can not select more than 5 cells!");
+          } else if (event.target.style.backgroundColor === "red") {
+            alert("You can not select cells you already fired on in previous turns!");
           } else {
-            if (this.salvoesToSend.length > 4) { // checking if more than 5
-              alert("You can not select more than 5 cells!");
-            } else {
-              event.target.style.backgroundColor = "yellow";
-              this.salvoesToSend.push(event.target.className);
-            }
+            event.target.style.backgroundColor = "yellow";
+            this.salvoesToSend.push(event.target.className);
           }
         }
-      },
+      }
+    },
 
     postShip() {
       if (

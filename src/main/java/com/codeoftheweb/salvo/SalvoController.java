@@ -317,9 +317,10 @@ public class SalvoController {
                return new ResponseEntity<>(makeMapforStatus("Error", "You fired already in this turn!"), HttpStatus.FORBIDDEN);
            } // the user has already submitted a salvo for the turn listed
            else {
-               salvoRepository.save(salvo);
                gP.addSalvo(salvo);
+               salvoRepository.save(salvo);
                return new ResponseEntity<>(makeMapforStatus("Success", "Salvo was fired!"),HttpStatus.CREATED);
+
            }
 
             }
