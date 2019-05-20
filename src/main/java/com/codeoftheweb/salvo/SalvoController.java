@@ -176,7 +176,7 @@ public class SalvoController {
     private Map<String, Object> createHisMaps(Salvo salvo) {
         Map<String, Object> createdHisMap = new LinkedHashMap<String, Object>();
         createdHisMap.put("turnNumber", salvo.getTurn());
-        createdHisMap.put("hitsOnOpponentInThisTurn", salvo.getHits(salvo.getLocation(), salvo.shipsList(salvo.getGamePlayer().getGame().getOpponent(salvo.getGamePlayer()).getShips())));
+        createdHisMap.put("allHitsInTurn", salvo.getHits(salvo.getLocation(), salvo.shipsList(salvo.getGamePlayer().getGame().getOpponent(salvo.getGamePlayer()).getShips())));
         // sending the list of ships of opponent and the list of locations from salvo
         return createdHisMap;
 

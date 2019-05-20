@@ -1,146 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="game.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="game.css" />
     <title>Ship Locations!</title>
 
     <style>
-    
-    td {
-
+      td {
         border: 1px solid black;
-    }
-    
+      }
     </style>
-</head>
+  </head>
 
-<body>
-<div id="vueApp">
+  <body>
+    <div id="vueApp">
+      <button @click="logout()">Logout</button>
+      <button @click="location.href='games.html';">All games</button>
 
+      <h1 v-if="!placeShips">{{ thisPlayer }} (you) vs. {{ opponent }}</h1>
 
-    <button @click="logout()">Logout</button>
-    <button @click="location.href='games.html';">All games</button>
+      <h2 v-if="placeShips">
+        It is time to place your ships, {{ thisPlayer }}!
+      </h2>
+      <h2 v-if="firstSalvo">It is time to fire your first salvo!</h2>
 
-    <h1 v-if="!placeShips">{{thisPlayer}} (you) vs. {{opponent}}</h1>
-
-    <h2 v-if="placeShips">It is time to place your ships,  {{thisPlayer}}!</h2>
-    <h2 v-if="firstSalvo">It is time to fire your first salvo!</h2>
-
-<div v-if="!placeShips">
-    <section>
-        <ul>
-            <li>A salvo is compromised of 5 shots, hence you can select 5 cells.</li>
-            <li>It is your goal to hit a cell where your opponent has placed a ship.</li>
+      <div v-if="!placeShips">
+        <section>
+          <ul>
+            <li>
+              A salvo is compromised of 5 shots, hence you can select 5 cells.
+            </li>
+            <li>
+              It is your goal to hit a cell where your opponent has placed a
+              ship.
+            </li>
             <li>Select a cell by clicking on it.</li>
             <li>Click again on the cell if you want to unselect it.</li>
-            <li>Cells you already fired on in previous turns are not selectable.
-                <span v-if="firstSalvo">Since this is your first turn you can select any cell.</span>
+            <li>
+              Cells you already fired on in previous turns are not selectable.
+              <span v-if="firstSalvo"
+                >Since this is your first turn you can select any cell.</span
+              >
             </li>
             <li>When you are happy with the cells you selected, click Done.</li>
-        </ul>
-    </section>
-</div>
+          </ul>
+        </section>
+      </div>
 
-    <div v-if="placeShips">
+      <div v-if="placeShips">
         <section>
-
-            <ul>
-                <li>Place the ships on the grid below you.</li>
-                <li>To do that, click on the little hand icon on a ship and drag it to a position on the grid of your choice.</li>
-                <li>Notice, that you can not:
-                    <ol>
-                        <li>Place ships outside of the grid.</li>
-                        <li>Place ships diagonally.</li>
-                        <li>Place ships so that they overlap.</li>
-                    </ol>
-                </li>
-                <li>If a position is illegal, you will not be able to place the ship there.</li>
-                <li>If you are not happy with a position of a ship, you can change it.</li>
-                <li>After you've placed all ships successfully on the grid, click on the Done button down below.</li>
-                <li>Notice that after you clicked Done, you will not be able to change the position of your ships anymore.</li>
-            </ul>
-
+          <ul>
+            <li>Place the ships on the grid below you.</li>
+            <li>
+              To do that, click on the little hand icon on a ship and drag it to
+              a position on the grid of your choice.
+            </li>
+            <li>
+              Notice, that you can not:
+              <ol>
+                <li>Place ships outside of the grid.</li>
+                <li>Place ships diagonally.</li>
+                <li>Place ships so that they overlap.</li>
+              </ol>
+            </li>
+            <li>
+              If a position is illegal, you will not be able to place the ship
+              there.
+            </li>
+            <li>
+              If you are not happy with a position of a ship, you can change it.
+            </li>
+            <li>
+              After you've placed all ships successfully on the grid, click on
+              the Done button down below.
+            </li>
+            <li>
+              Notice that after you clicked Done, you will not be able to change
+              the position of your ships anymore.
+            </li>
+          </ul>
         </section>
 
         <section class="forms">
+          <div class="bigShips">
+            <ul>
+              <div
+                id="dragAir"
+                draggable="true"
+                @dragstart="drag(event)"
+                class="form"
+              >
+                Here
+              </div>
+              <li>Name: Aircraft Carrier</li>
+              <li>Length: 5</li>
+            </ul>
 
-            <div class="bigShips">
+            <ul>
+              <div
+                id="dragBat"
+                draggable="true"
+                @dragstart="drag(event)"
+                class="form"
+              >
+                Here
+              </div>
+              <li>Name: Battleship</li>
+              <li>Length: 4</li>
+            </ul>
+          </div>
 
-                <ul>
-                    <div id="dragAir" draggable="true" @dragstart="drag(event)" class="form">Here</div>
-                    <li>Name: Aircraft Carrier</li>
-                    <li>Length: 5</li>
-                </ul>
+          <div class="smallShips">
+            <ul>
+              <div
+                id="dragSub"
+                draggable="true"
+                @dragstart="drag(event)"
+                class="form"
+              >
+                Here
+              </div>
+              <li>Name: Submarine</li>
+              <li>Length: 3</li>
+            </ul>
 
+            <ul>
+              <div
+                id="dragDes"
+                draggable="true"
+                @dragstart="drag(event)"
+                class="form"
+              >
+                Here
+              </div>
+              <li>Name: Destroyer</li>
+              <li>Length: 3</li>
+            </ul>
 
-
-                <ul>
-                    <div id="dragBat" draggable="true" @dragstart="drag(event)" class="form">Here</div>
-                    <li>Name: Battleship</li>
-                    <li>Length: 4</li>
-                </ul>
-            </div>
-
-
-            <div class="smallShips">
-                <ul>
-                    <div id="dragSub" draggable="true" @dragstart="drag(event)" class="form">Here</div>
-                    <li>Name: Submarine</li>
-                    <li>Length: 3</li>
-                </ul>
-
-
-                <ul>
-                    <div id="dragDes" draggable="true" @dragstart="drag(event)" class="form">Here</div>
-                    <li>Name: Destroyer</li>
-                    <li>Length: 3</li>
-                </ul>
-
-                <ul>
-                    <div id="dragPat" draggable="true" @dragstart="drag(event)" class="form">Here</div>
-                    <li>Name: Patrol Boat</li>
-                    <li>Length: 2</li>
-                </ul>
-
-            </div>
-
+            <ul>
+              <div
+                id="dragPat"
+                draggable="true"
+                @dragstart="drag(event)"
+                class="form"
+              >
+                Here
+              </div>
+              <li>Name: Patrol Boat</li>
+              <li>Length: 2</li>
+            </ul>
+          </div>
         </section>
+      </div>
 
+      <div v-if="!placeShips">
+        <h2>Hits on you!</h2>
+        <table>
+          <thead>
+            <th>Turn</th>
+            <th>Hits</th>
+          </thead>
+          <tbody id="yourHistory"></tbody>
+        </table>
 
-    </div>
+        <h2>Hits on your opponent!</h2>
+        <table>
+          <thead>
+            <th>Turn</th>
+            <th>Hits</th>
+          </thead>
+          <tbody id="opponentHistory"></tbody>
+        </table>
+      </div>
 
-    <h2>Your Field</h2>
-    <table @drop="drop(event)" @dragover="allowDrop(event)" cellspacing="0" id="table"></table>
+      <h2>Your Field</h2>
+      <table
+        @drop="drop(event)"
+        @dragover="allowDrop(event)"
+        cellspacing="0"
+        id="table"
+      ></table>
 
-
-    <div v-if="!placeShips">
-
-
-    <br>
-    <br>
-    <h2>Battlefield of opponent displaying your salvoes!</h2>
-    <table @click="selectShot()" cellspacing="0" id="tableSalvo"></table>
+      <div v-if="!placeShips">
+        <br />
+        <br />
+        <h2>Battlefield of opponent displaying your salvoes!</h2>
+        <table @click="selectShot()" cellspacing="0" id="tableSalvo"></table>
         <button @click="postSalvo()">Done placing Salvoes</button>
+      </div>
 
+      <button @click="postShip()" v-if="placeShips">Done placing ships</button>
     </div>
 
-    <button @click="postShip()" v-if="placeShips">Done placing ships</button>
-
-    </div>
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-<script src="game.js"></script>
-
-
-
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="game.js"></script>
+  </body>
 </html>

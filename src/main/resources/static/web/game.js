@@ -44,19 +44,27 @@ var app = new Vue({
 
           if (this.data.Ships.length === 0) {
             this.placeShips = true;
-          }
-
-          else {
+          } else {
             this.findOpponent();
             this.displayShips(this.data);
             this.identifySalvoes(this.data);
 
+            for (let j = 0; j < this.data.gameHistory.length; j++) {
+              if (this.thisGamePlayerId == Object.keys(this.data.gameHistory[j])) {
+                this.displayHis(this.data.gameHistory[j][this.thisGamePlayerId]); // showing hits on my opponent
+              } else {
+                this.displayHisOpponent(this.data.gameHistory[j][this.opponentGamePlayerId]);
+              }
+            }
 
-            if (this.thisPlayerSalvoes[this.thisGamePlayerId].length === 0){this.firstSalvo = true;}
-            if (!this.firstSalvo){
+            if (this.thisPlayerSalvoes[this.thisGamePlayerId].length === 0) {
+              this.firstSalvo = true;
+            }
+            if (!this.firstSalvo) {
 
-             let lengthOfSalvoes = this.thisPlayerSalvoes[this.thisGamePlayerId].length
-             this.thisPlayerTurn = this.thisPlayerSalvoes[this.thisGamePlayerId][lengthOfSalvoes - 1].turn;}
+              let lengthOfSalvoes = this.thisPlayerSalvoes[this.thisGamePlayerId].length
+              this.thisPlayerTurn = this.thisPlayerSalvoes[this.thisGamePlayerId][lengthOfSalvoes - 1].turn;
+            }
 
 
           }
@@ -66,9 +74,32 @@ var app = new Vue({
 
   mounted() {
     this.displayGrid();
+
   },
 
   methods: {
+
+    displayHis(opponentHits) { // showing hits on my opponent 
+      var table = document.getElementById('opponentHistory')
+      for (let i = 0; i < opponentHits.length; i++) {
+        var row = document.createElement('tr')
+        row.insertCell().innerHTML = opponentHits[i].turnNumber;
+        row.insertCell().innerHTML = opponentHits[i].allHitsInTurn;
+        table.append(row);
+      }
+
+    },
+
+    displayHisOpponent(hitsOnMe) { // showing hits on me 
+      var table = document.getElementById('yourHistory')
+      for (let i = 0; i < hitsOnMe.length; i++) {
+        var row = document.createElement('tr')
+        row.insertCell().innerHTML = hitsOnMe[i].turnNumber;
+        row.insertCell().innerHTML = hitsOnMe[i].allHitsInTurn;
+        table.append(row);
+
+      }
+    },
 
     postSalvo() {
       if (this.salvoesToSend.length != 5) {
@@ -85,15 +116,15 @@ var app = new Vue({
         console.log(turn);
 
         $.post({
-          url: `/api/games/players/${gpid}/salvoes`,
-          data: JSON.stringify({
-            turn: turn,
-            location: this.salvoesToSend
-          }),
+            url: `/api/games/players/${gpid}/salvoes`,
+            data: JSON.stringify({
+              turn: turn,
+              location: this.salvoesToSend
+            }),
 
-          dataType: "text",
-          contentType: "application/json"
-        })
+            dataType: "text",
+            contentType: "application/json"
+          })
           .done(res => {
             console.log(res);
             location.reload();
@@ -156,37 +187,36 @@ var app = new Vue({
         let gpid = this.thisGamePlayerId;
 
         $.post({
-          url: `/api/games/players/${gpid}/ships`,
-          data: JSON.stringify([
-            {
-              type: type1,
-              location: location1
-            },
+            url: `/api/games/players/${gpid}/ships`,
+            data: JSON.stringify([{
+                type: type1,
+                location: location1
+              },
 
-            {
-              type: type2,
-              location: location2
-            },
+              {
+                type: type2,
+                location: location2
+              },
 
-            {
-              type: type3,
-              location: location3
-            },
+              {
+                type: type3,
+                location: location3
+              },
 
-            {
-              type: type4,
-              location: location4
-            },
+              {
+                type: type4,
+                location: location4
+              },
 
-            {
-              type: type5,
-              location: location5
-            }
-          ]),
+              {
+                type: type5,
+                location: location5
+              }
+            ]),
 
-          dataType: "text",
-          contentType: "application/json"
-        })
+            dataType: "text",
+            contentType: "application/json"
+          })
           .done(res => {
             console.log(res);
             location.reload();
@@ -228,19 +258,20 @@ var app = new Vue({
     },
 
     showHits(salvoes) { // showing where i got hit
- console.log(salvoes)
+
       let myObj = salvoes[this.opponentGamePlayerId];
 
-      if (myObj != null){
-      for (var i = 0; i < myObj.length; i++) {
-        this.allSalvoOpponentLocations.push(myObj[i].Locations);
+      if (myObj != null) {
+        for (var i = 0; i < myObj.length; i++) {
+          this.allSalvoOpponentLocations.push(myObj[i].Locations);
+        }
+        this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
+        console.log(this.allSalvoOpponentLocations)
+        for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
+          hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
+          hitCell.style.backgroundColor = "black";
+        }
       }
-      this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
-console.log(this.allSalvoOpponentLocations)
-      for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
-        hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
-        hitCell.style.backgroundColor = "black";
-      }}
 
     },
 
@@ -318,7 +349,7 @@ console.log(this.allSalvoOpponentLocations)
     },
 
     logout() {
-      $.post("/api/logout").done(function() {
+      $.post("/api/logout").done(function () {
         location.replace(`http://localhost:8080/web/games.html`);
       });
     },
