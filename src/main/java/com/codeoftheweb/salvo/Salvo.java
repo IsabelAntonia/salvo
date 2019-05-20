@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 // a salvo are all the shots in one turn
 
@@ -72,5 +73,28 @@ public class Salvo {
     }
 
 
+
+    public int getHits(List<String> location, List<String> shipsLocs) {
+
+        List<String> hits = new ArrayList<>();
+        location.forEach(shot -> {
+            if (shipsLocs.contains(shot)) {
+                hits.add(shot);
+            }
+        });
+        return hits.size();
+    }
+
+
+
+    public List<String> shipsList(Set<Ship> ships) {
+        List<String> shipsList = new ArrayList<>();
+        for (Ship ship: ships) {
+            for (String location: ship.getLocation()) {
+                shipsList.add(location);
+            }
+        }
+        return shipsList;
+    }
 
 }

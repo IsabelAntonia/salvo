@@ -98,6 +98,7 @@ public class SalvoController {
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
         gameMapSet.put("thisPlayer", createThisPlayerMap(gamePlayerId));
+        gameMapSet.put("gameHistory", createGameHistory(gamePlayerId.getGame().gamePlayer)); // getting two gameplayers
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
         gameMapSet.put("Salvoes", createSalvoMaps(gamePlayerId.getGame().gamePlayer)); // salvo
         return gameMapSet;
@@ -129,6 +130,10 @@ public class SalvoController {
         return ships.stream().map(ship -> createShipMaps(ship)).collect(toList());
     }
 
+    private List<Map<String, Object>> createGameHistory(Set<GamePlayer> gamePlayer) {
+        return gamePlayer.stream().map(gameplayer -> createHistoryMapForEachGamePlayer(gameplayer)).collect(toList());
+    }
+
 
     private List<Map<String, Object>> createGamePlayerMap(Set<GamePlayer> gamePlayer) {
         return gamePlayer.stream().map(gameplayer -> createGamePlayerMaps(gameplayer)).collect(toList());
@@ -142,6 +147,12 @@ public class SalvoController {
         return salvoes.stream().map(salvo -> createTurnMaps(salvo)).collect(toList());
     }
 
+    private List<Map<String, Object>> createHisMap(Set<Salvo> salvoes) { // salvos
+        return salvoes.stream().map(salvo -> createHisMaps(salvo)).collect(toList());
+    }
+
+
+
     public Player authenticatedUser(Authentication authentication) {
         return playerRepository.findByEmail(authentication.getName());
     }
@@ -153,6 +164,24 @@ public class SalvoController {
         return shipMap;
 
     }
+
+
+    private Map<String, Object> createHistoryMapForEachGamePlayer(GamePlayer gamePlayer) {
+        Map<String, Object> historyMap = new LinkedHashMap<String, Object>();
+        historyMap.put(gamePlayer.getGamePlayerIdString(), createHisMap(gamePlayer.getSalvo()));
+        return historyMap;
+
+    }
+
+    private Map<String, Object> createHisMaps(Salvo salvo) {
+        Map<String, Object> createdHisMap = new LinkedHashMap<String, Object>();
+        createdHisMap.put("turnNumber", salvo.getTurn());
+        createdHisMap.put("hitsOnOpponentInThisTurn", salvo.getHits(salvo.getLocation(), salvo.shipsList(salvo.getGamePlayer().getGame().getOpponent(salvo.getGamePlayer()).getShips())));
+        // sending the list of ships of opponent and the list of locations from salvo
+        return createdHisMap;
+
+    }
+
 
     private Map<String, Object> createTurnMaps(Salvo salvo) { // salvo
         Map<String, Object> createdTurnMap = new LinkedHashMap<String, Object>();

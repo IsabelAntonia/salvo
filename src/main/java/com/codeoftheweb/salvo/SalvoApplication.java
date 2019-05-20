@@ -40,7 +40,7 @@ public class SalvoApplication {
 
             Player player1 = new Player("jack@gmail.com", "kjsdkjf");
             Player player2 = new Player("chloe@gmail.com", "kjhdfj2");
-            Player player3 = new Player("kim@gmail.com", "bvkraf34");
+            Player player3 = new Player("kim@gmail.com", "2");
             Player player4 = new Player("david@gmail.com", "vwhthb");
             Player player5 = new Player("michaelle@gmail.com", "1");
 
@@ -67,7 +67,7 @@ public class SalvoApplication {
             GamePlayer gamePlayer5 = new GamePlayer(game1, player3); // Kim
             GamePlayer gamePlayer6 = new GamePlayer(game2, player4); // David
 
-            List<String> loc1 = Arrays.asList("E3","E4","E5","E7","E8");
+            List<String> loc1 = Arrays.asList("E3","E4","E5","E6","E7");
             List<String> loc2 = Arrays.asList("A5","B5","C5","D5");
             List<String> loc3 = Arrays.asList("H1","H2","H3");
             List<String> loc4 = Arrays.asList("I5","I6","I7");

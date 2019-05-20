@@ -5,8 +5,9 @@ var app = new Vue({
     opponent: " ",
     thisPlayer: " ",
     thisGamePlayerId: null,
-    thisPlayerId: 0,
-    opponentId: 0,
+    thisPlayerId: null,
+    opponentId: null,
+    opponentGamePlayerId: null,
     thisPlayers: [],
     allLocations: [],
     thisPlayerSalvoes: {},
@@ -198,6 +199,7 @@ var app = new Vue({
         if (this.thisPlayerId !== this.players[i].player.playerId) {
           this.opponent = this.players[i].player.playerEmail;
           this.opponentId = this.players[i].player.playerId;
+          this.opponentGamePlayerId = this.players[i].gamePlayerId;
         }
       }
     },
@@ -225,22 +227,26 @@ var app = new Vue({
       this.showHits(this.opponentSalvoes);
     },
 
-    showHits(salvoes) {
+    showHits(salvoes) { // showing where i got hit
+ console.log(salvoes)
+      let myObj = salvoes[this.opponentGamePlayerId];
 
-      let myObj = salvoes[this.opponentId];
       if (myObj != null){
       for (var i = 0; i < myObj.length; i++) {
         this.allSalvoOpponentLocations.push(myObj[i].Locations);
       }
       this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
-
+console.log(this.allSalvoOpponentLocations)
       for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
         hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
         hitCell.style.backgroundColor = "black";
       }}
+
     },
 
-    displayPlayerSalvoes(salvoes) {
+    displayPlayerSalvoes(salvoes) { // showing the salvoes i fired
+
+
       let myObj = salvoes[this.data.thisPlayer.gamePlayerId];
       for (var i = 0; i < myObj.length; i++) {
         this.allSalvoPlayerLocations.push(myObj[i].Locations);

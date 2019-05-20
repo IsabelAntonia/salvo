@@ -72,6 +72,15 @@ public class Game {
         return 1;
     }
 
+    public GamePlayer getOpponent(GamePlayer thisGamePlayer) {
+        for (GamePlayer opponent: this.gamePlayer) {
+            if (thisGamePlayer.getId() != opponent.getId()) {
+                return opponent;
+            }
+        }
+        return null;
+    }
+
 
 
 
