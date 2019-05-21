@@ -171,22 +171,6 @@ public class SalvoController {
         return 0;
     }
 
-/*    private String findFinalWinner(GamePlayer gameplayer){
-
-        String tied = "tie";
-        String noWinner = "none";
-
-        if (findTotalHits(gameplayer.salvoes) == 17){
-            return gameplayer.getPlayer().getEmail();
-        }
-
-        else if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17){
-            return gameplayer.getGame().getOpponent(gameplayer).getPlayer().getEmail();
-        }
-
-
-        return noWinner;
-    }*/
 
     public Player authenticatedUser(Authentication authentication) {
         return playerRepository.findByEmail(authentication.getName());
@@ -400,15 +384,15 @@ public class SalvoController {
         String tied = "tie";
         String noWinner = "none";
 
-        if (findTotalHits(gameplayer.salvoes) == 17 && (findLastTurn(gameplayer.salvoes) != findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
+        if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) != 17 && findTotalHits(gameplayer.salvoes) == 17 && (findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
             return gameplayer.getPlayer().getEmail();
         }
 
-        else if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && (findLastTurn(gameplayer.salvoes) != findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
+        else if (findTotalHits(gameplayer.salvoes) != 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && (findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
             return gameplayer.getGame().getOpponent(gameplayer).getPlayer().getEmail();
         }
 
-        else if (findTotalHits(gameplayer.salvoes) == 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && findLastTurn(gameplayer.salvoes) != findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
+        else if (findTotalHits(gameplayer.salvoes) == 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
             return tied ;
         }
 
