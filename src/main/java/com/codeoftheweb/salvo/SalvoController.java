@@ -99,7 +99,8 @@ public class SalvoController {
         Map<String, Object> gameMapSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
-        gameMapSet.put("Winner", findWinner(gamePlayerId.salvoes));
+        gameMapSet.put("Winner", findFinalWinner(gamePlayerId));
+//        gameMapSet.put("Winner", findLastTurn(gamePlayerId.salvoes));
         gameMapSet.put("thisPlayer", createThisPlayerMap(gamePlayerId));
         gameMapSet.put("gameHistory", createGameHistory(gamePlayerId.getGame().gamePlayer)); // getting two gameplayers
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
@@ -151,13 +152,41 @@ public class SalvoController {
         return salvoes.stream().map(salvo -> createHisMaps(salvo)).collect(toList());
     }
 
-    private int findWinner(Set<Salvo> salvoes) { // salvos
+    private int findTotalHits(Set<Salvo> salvoes) { // salvos
         List<Integer> mySumList = new ArrayList();
         mySumList =  salvoes.stream().map(salvo -> salvo.getHits(salvo.getLocation(), salvo.shipsList(salvo.getGamePlayer().getGame().getOpponent(salvo.getGamePlayer()).getShips()))).collect(Collectors.toList());
         int sum = mySumList.stream().reduce(0, Integer::sum);
     return sum;
     }
 
+    private int findLastTurn(Set<Salvo> salvoes) { // salvos
+
+        if (salvoes.size() > 0){
+        List<Integer> myTurnList = new ArrayList();
+        myTurnList =  salvoes.stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
+        int lastTurn = Collections.max(myTurnList);
+        return lastTurn;
+        }
+
+        return 0;
+    }
+
+/*    private String findFinalWinner(GamePlayer gameplayer){
+
+        String tied = "tie";
+        String noWinner = "none";
+
+        if (findTotalHits(gameplayer.salvoes) == 17){
+            return gameplayer.getPlayer().getEmail();
+        }
+
+        else if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17){
+            return gameplayer.getGame().getOpponent(gameplayer).getPlayer().getEmail();
+        }
+
+
+        return noWinner;
+    }*/
 
     public Player authenticatedUser(Authentication authentication) {
         return playerRepository.findByEmail(authentication.getName());
@@ -364,6 +393,26 @@ public class SalvoController {
         else {
             return new ResponseEntity<>(makeMapforStatus("Error","Login to place ships!"),HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    private String findFinalWinner(GamePlayer gameplayer){
+
+        String tied = "tie";
+        String noWinner = "none";
+
+        if (findTotalHits(gameplayer.salvoes) == 17 && (findLastTurn(gameplayer.salvoes) != findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
+            return gameplayer.getPlayer().getEmail();
+        }
+
+        else if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && (findLastTurn(gameplayer.salvoes) != findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
+            return gameplayer.getGame().getOpponent(gameplayer).getPlayer().getEmail();
+        }
+
+        else if (findTotalHits(gameplayer.salvoes) == 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && findLastTurn(gameplayer.salvoes) != findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
+            return tied ;
+        }
+
+        return noWinner;
     }
 
 
