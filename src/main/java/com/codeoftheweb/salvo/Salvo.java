@@ -74,7 +74,7 @@ public class Salvo {
 
 
 
-    public int getHits(List<String> location, List<String> shipsLocs) {
+    public int getHits(List<String> location, List<String> shipsLocs) { // list of locations of one  salvo
 
         List<String> hits = new ArrayList<>();
         location.forEach(shot -> {
@@ -82,6 +82,7 @@ public class Salvo {
                 hits.add(shot);
             }
         });
+
         return hits.size();
     }
 
@@ -94,7 +95,8 @@ public class Salvo {
                 shipsList.add(location);
             }
         }
-        return shipsList;
+        return shipsList; // shipsList is list of locations of all ships
     }
+
 
 }

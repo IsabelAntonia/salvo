@@ -67,17 +67,19 @@ var vm = new Vue({
     methods: {
         buildTable(leaderBoardData) {
 
+        console.log(leaderBoardData)
+
 
             for (var i = 0; i < leaderBoardData.length; i++) {
 
-                if (leaderBoardData[i].totalScore.length !== 0) {
+                if (leaderBoardData[i].allScores.length !== 0) {
 
                     var row = document.createElement('tr');
                     row.insertCell().innerHTML = leaderBoardData[i].email;
-                    row.insertCell().innerHTML = this.calculateTotalScore(leaderBoardData[i].totalScore.flat());
-                    row.insertCell().innerHTML = this.calculateWon(leaderBoardData[i].totalScore.flat());
-                    row.insertCell().innerHTML = this.calculateLost(leaderBoardData[i].totalScore.flat());
-                    row.insertCell().innerHTML = this.calculateTied(leaderBoardData[i].totalScore.flat());
+                    row.insertCell().innerHTML = this.calculateTotalScore(leaderBoardData[i].allScores.flat());
+                    row.insertCell().innerHTML = this.calculateWon(leaderBoardData[i].allScores.flat());
+                    row.insertCell().innerHTML = this.calculateLost(leaderBoardData[i].allScores.flat());
+                    row.insertCell().innerHTML = this.calculateTied(leaderBoardData[i].allScores.flat());
                     document.getElementById('table').append(row);
                 }
 

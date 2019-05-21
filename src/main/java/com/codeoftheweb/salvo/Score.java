@@ -30,8 +30,8 @@ public class Score {
 
     public Score() {}
 
-    public Score(double playerScore, Game game, Player player) {
-        this.playerScore += playerScore;
+    public Score(double playerScore, Game game, Player player) { //playerScore is score for one player for one game
+        this.playerScore = playerScore;
         this.game = game;
         this.player = player;
     }

@@ -10,7 +10,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -97,6 +99,7 @@ public class SalvoController {
         Map<String, Object> gameMapSet = new LinkedHashMap<>();
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
+        gameMapSet.put("Winner", findWinner(gamePlayerId.salvoes));
         gameMapSet.put("thisPlayer", createThisPlayerMap(gamePlayerId));
         gameMapSet.put("gameHistory", createGameHistory(gamePlayerId.getGame().gamePlayer)); // getting two gameplayers
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
@@ -121,9 +124,6 @@ public class SalvoController {
         newMap.put("games", gameRepository.findAll().stream().map(game -> createGameMap(game)).collect(toList()));
         return newMap;
     }
-/*    public List<Object> getGameMap() {
-        return gameRepository.findAll().stream().map(game->createGameMap(game)).collect(toList());
-    }*/
 
 
     private List<Map<String, Object>> createShipMap(Set<Ship> ships) {
@@ -151,6 +151,12 @@ public class SalvoController {
         return salvoes.stream().map(salvo -> createHisMaps(salvo)).collect(toList());
     }
 
+    private int findWinner(Set<Salvo> salvoes) { // salvos
+        List<Integer> mySumList = new ArrayList();
+        mySumList =  salvoes.stream().map(salvo -> salvo.getHits(salvo.getLocation(), salvo.shipsList(salvo.getGamePlayer().getGame().getOpponent(salvo.getGamePlayer()).getShips()))).collect(Collectors.toList());
+        int sum = mySumList.stream().reduce(0, Integer::sum);
+    return sum;
+    }
 
 
     public Player authenticatedUser(Authentication authentication) {
@@ -232,7 +238,7 @@ public class SalvoController {
     private Map<String, Object> createLeaderboardMap(Player player) {
         Map<String, Object> createdLeaderboardMap = new LinkedHashMap<String, Object>();
         createdLeaderboardMap.put("email", player.getEmail()); //
-        createdLeaderboardMap.put("totalScore", pass(player.score));
+        createdLeaderboardMap.put("allScores", pass(player.score));
         return createdLeaderboardMap;
     }
 
@@ -360,25 +366,7 @@ public class SalvoController {
         }
     }
 
-/*    @RequestMapping (value ="/games/players/{gpid}/salvoes", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> addSalvoes(@PathVariable long gpid, @RequestBody Salvo salvo, Authentication authentication) {
-        GamePlayer gP = gamePlayerRepository.findById(gpid);
-        if (authentication != null) {
 
-            if (gP.getPlayer() != authenticatedUser(authentication)){ // authenticated user has to be gpid
-                return new ResponseEntity<>(makeMapforStatus("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
-            }
-                else {
-                    gP.addSalvo(salvo);
-                    salvoRepository.save(salvo);
-                    return new ResponseEntity<>(makeMapforStatus("Success", "Salvo was fired!"),HttpStatus.CREATED);
-                }
-        }
-
-        else {
-            return new ResponseEntity<>(makeMapforStatus("Error","Login to place ships!"),HttpStatus.UNAUTHORIZED);
-        }
-    }*/
 
 
 }
