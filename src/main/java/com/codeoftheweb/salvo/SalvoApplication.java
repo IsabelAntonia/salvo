@@ -88,15 +88,11 @@ public class SalvoApplication {
             Salvo salvo2 = new Salvo(2, salvoLoc2);
             Salvo salvo3 = new Salvo(1, salvoLoc3);
 
-            Score score1 = new Score(0.5, game1, player5);
-            Score score5 = new Score(0.5, game1, player3);
 
             Score score2 = new Score(0, game2, player1);
             Score score6 = new Score(1, game2, player4);
             Score score7 = new Score(1, game3, player5);
 
-	/*		Score score3 = new Score(0.5, game3, player5);
-			Score score4 = new Score(0.5, game3, player2);*/
 
             gamePlayerRepository.save(gamePlayer1);
             gamePlayerRepository.save(gamePlayer2);
@@ -123,11 +119,8 @@ public class SalvoApplication {
             salvoRepository.save(salvo2);
             salvoRepository.save(salvo3);
 
-            scoreRepository.save(score1);
+
             scoreRepository.save(score2);
-		/*	scoreRepository.save(score3);
-			scoreRepository.save(score4);*/
-            scoreRepository.save(score5);
             scoreRepository.save(score6);
             scoreRepository.save(score7);
 

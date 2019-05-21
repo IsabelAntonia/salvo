@@ -36,6 +36,9 @@ public class SalvoController {
    @Autowired
    private SalvoRepository salvoRepository;
 
+    @Autowired
+    private ScoreRepository scoreRepository;
+
     @RequestMapping("/leaderboard")
     public List<Object> getLeaderboardMap() {
         return playerRepository.findAll().stream().map(player -> createLeaderboardMap(player)).collect(toList());
@@ -100,7 +103,6 @@ public class SalvoController {
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
         gameMapSet.put("Winner", findFinalWinner(gamePlayerId));
-//        gameMapSet.put("Winner", findLastTurn(gamePlayerId.salvoes));
         gameMapSet.put("thisPlayer", createThisPlayerMap(gamePlayerId));
         gameMapSet.put("gameHistory", createGameHistory(gamePlayerId.getGame().gamePlayer)); // getting two gameplayers
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
@@ -364,6 +366,10 @@ public class SalvoController {
            if (allTurns.contains(salvo.getTurn())){
                return new ResponseEntity<>(makeMapforStatus("Error", "You fired already in this turn!"), HttpStatus.FORBIDDEN);
            } // the user has already submitted a salvo for the turn listed
+
+           else if (gameOver(gP)){
+               return new ResponseEntity<>(makeMapforStatus("Error", "Game is over!"), HttpStatus.FORBIDDEN);
+           }
            else {
                gP.addSalvo(salvo);
                salvoRepository.save(salvo);
@@ -384,19 +390,37 @@ public class SalvoController {
         String tied = "tie";
         String noWinner = "none";
 
+
         if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) != 17 && findTotalHits(gameplayer.salvoes) == 17 && (findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
+            Score score = new Score(1, gameplayer.getGame(), gameplayer.getPlayer()); // this Player on
+            scoreRepository.save(score);
             return gameplayer.getPlayer().getEmail();
         }
 
         else if (findTotalHits(gameplayer.salvoes) != 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && (findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
+            Score score = new Score(1, gameplayer.getGame(), gameplayer.getGame().getOpponent(gameplayer).getPlayer()); // this Player on
+            scoreRepository.save(score);
             return gameplayer.getGame().getOpponent(gameplayer).getPlayer().getEmail();
         }
 
         else if (findTotalHits(gameplayer.salvoes) == 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
+
+            Score scoreOp = new Score(0.5, gameplayer.getGame(), gameplayer.getGame().getOpponent(gameplayer).getPlayer()); // this Player on
+            Score score = new Score(0.5, gameplayer.getGame(), gameplayer.getPlayer()); // this Player on
+            scoreRepository.save(score);
+            scoreRepository.save(scoreOp);
             return tied ;
         }
 
         return noWinner;
+    }
+
+    private boolean gameOver (GamePlayer gameplayer){
+
+        if (gameplayer.getGame().getScore().size() == 2){
+            return true;
+        }
+        return false;
     }
 
 
