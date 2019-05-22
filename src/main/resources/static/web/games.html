@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Salvo!</title>
     <link rel="stylesheet" href="games.css">
 </head>
+
 <body>
 
 
     <div id="app">
 
         <div v-if="loginPos">
-        <input  id="email" type="text"  placeholder="Email" value="">
-        <input id="password" type="text" placeholder="Password" value="">
-        <button @click="login()">Login</button>
-        <button  @click="signUp()">Signup</button>
+            <input id="email" type="text" placeholder="Email" value="">
+            <input id="password" type="text" placeholder="Password" value="">
+            <button @click="login()">Login</button>
+            <button @click="signUp()">Signup</button>
         </div>
 
-       <button v-else @click="logout()">Logout</button>
+        <button v-else @click="logout()">Logout</button>
 
-<p v-if="!loginPos">Welcome, {{data.currentUser.playerEmail}}</p>
+        <p v-if="!loginPos">Welcome, {{data.currentUser.playerEmail}}</p>
 
         <p v-if="reenterPos">Re-enter a game!</p>
 
-        <div v-for="game in linkedGames">
+        <div v-for="game in overGames">
             <ol>
-                <li><a @click="insertPathVariable()" :id = "game.GameId" style="color: green; cursor: pointer"
-                      class="linked">GameId: {{game.GameId}}</a></li>
+                <li><a @click="insertPathVariable()" :id="game.GameId" style="color: red; cursor: pointer"
+                        class="linked">GameId: {{game.GameId}}</a><span>This Game is over!</span></li>
+                <li>creationDate: {{game.creationDate}}</li>
+                <li>GamePlayers: {{game.gamePlayers}}</li>
+            </ol>
+
+        </div>
+
+        <div v-for="game in openGames">
+            <ol>
+                <li><a @click="insertPathVariable()" :id="game.GameId" style="color: green; cursor: pointer"
+                        class="linked">GameId: {{game.GameId}}</a><span>Play game!</span></li>
                 <li>creationDate: {{game.creationDate}}</li>
                 <li>GamePlayers: {{game.gamePlayers}}</li>
             </ol>
@@ -34,7 +46,8 @@
 
         <hr v-if="reenterPos">
 
-        <p v-if="reenterPos">Here are all other games. Join a game that is looking for a player or create a new game!</p>
+        <p v-if="reenterPos">Here are all other games. Join a game that is looking for a player or create a new game!
+        </p>
 
         <div v-for="game in fullGames">
             <ol>
@@ -50,7 +63,7 @@
                 <li>GameId: {{game.GameId}}</li>
                 <li>creationDate: {{game.creationDate}}</li>
                 <li>GamePlayers: {{game.gamePlayers}}</li>
-                <li><button :id = "game.GameId" @click="joinGame()">Join Game {{game.GameId}}</button></li>
+                <li><button :id="game.GameId" @click="joinGame()">Join Game {{game.GameId}}</button></li>
 
             </ol>
         </div>
@@ -64,23 +77,24 @@
 
 
 
-<table >
+        <table>
 
-    <thead>
-    <th>Email</th>
-    <th>TotalScore</th>
-    <th>Won</th>
-    <th>Lost</th>
-    <th>Tied</th>
-    </thead>
+            <thead>
+                <th>Email</th>
+                <th>TotalScore</th>
+                <th>Won</th>
+                <th>Lost</th>
+                <th>Tied</th>
+            </thead>
 
-    <tbody id="table"></tbody>
+            <tbody id="table"></tbody>
 
-</table>
+        </table>
 
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="games.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="games.js"></script>
 </body>
+
 </html>

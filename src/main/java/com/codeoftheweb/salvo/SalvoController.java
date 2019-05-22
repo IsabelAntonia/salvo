@@ -30,11 +30,11 @@ public class SalvoController {
     @Autowired
     private GameRepository gameRepository;
 
-   @Autowired
-   private ShipRepository shipRepository;
+    @Autowired
+    private ShipRepository shipRepository;
 
-   @Autowired
-   private SalvoRepository salvoRepository;
+    @Autowired
+    private SalvoRepository salvoRepository;
 
     @Autowired
     private ScoreRepository scoreRepository;
@@ -217,6 +217,7 @@ public class SalvoController {
         gamemap.put("GameId", game.getId()); // i can get the Game id
         gamemap.put("creationDate", game.getDate()); // i can get the Date
         gamemap.put("gamePlayers", createGamePlayerMap(game.gamePlayer)); // i can get the gamePlayers
+        gamemap.put("gameOver", gameIsOver(game));
         return gamemap;
     }
 
@@ -418,6 +419,14 @@ public class SalvoController {
     private boolean gameOver (GamePlayer gameplayer){
 
         if (gameplayer.getGame().getScore().size() == 2){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean gameIsOver (Game game){
+
+        if (game.getScore().size() == 2){
             return true;
         }
         return false;

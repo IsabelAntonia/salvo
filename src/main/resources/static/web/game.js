@@ -22,8 +22,11 @@ var app = new Vue({
     dragPatLocations: [],
     firstSalvo: false,
     salvoesToSend: [],
-    thisPlayerTurn: null
-
+    thisPlayerTurn: null,
+    gameOver: false,
+    tie: false,
+    youWon: false,
+    opponentWon: false
   },
   beforeCreate() {
     let url = new URLSearchParams(window.location.search);
@@ -41,19 +44,33 @@ var app = new Vue({
           this.players = this.data.Info.gamePlayers;
           this.thisGamePlayerId = this.data.thisPlayer.gamePlayerId;
 
-
           if (this.data.Ships.length === 0) {
             this.placeShips = true;
+          } else if (this.data.Winner !== "none") {
+            this.gameOver = true;
+            if (this.data.Winner === "tie") {
+              this.tie = true;
+            } else if (this.data.Winner === thisPlayer) {
+              this.youWon = true;
+            } else {
+              this.opponentWon = true;
+            }
           } else {
             this.findOpponent();
             this.displayShips(this.data);
             this.identifySalvoes(this.data);
 
             for (let j = 0; j < this.data.gameHistory.length; j++) {
-              if (this.thisGamePlayerId == Object.keys(this.data.gameHistory[j])) {
-                this.displayHis(this.data.gameHistory[j][this.thisGamePlayerId]); // showing hits on my opponent
+              if (
+                this.thisGamePlayerId == Object.keys(this.data.gameHistory[j])
+              ) {
+                this.displayHis(
+                  this.data.gameHistory[j][this.thisGamePlayerId]
+                ); // showing hits on my opponent
               } else {
-                this.displayHisOpponent(this.data.gameHistory[j][this.opponentGamePlayerId]);
+                this.displayHisOpponent(
+                  this.data.gameHistory[j][this.opponentGamePlayerId]
+                );
               }
             }
 
@@ -61,12 +78,13 @@ var app = new Vue({
               this.firstSalvo = true;
             }
             if (!this.firstSalvo) {
-
-              let lengthOfSalvoes = this.thisPlayerSalvoes[this.thisGamePlayerId].length
-              this.thisPlayerTurn = this.thisPlayerSalvoes[this.thisGamePlayerId][lengthOfSalvoes - 1].turn;
+              let lengthOfSalvoes = this.thisPlayerSalvoes[
+                this.thisGamePlayerId
+              ].length;
+              this.thisPlayerTurn = this.thisPlayerSalvoes[
+                this.thisGamePlayerId
+              ][lengthOfSalvoes - 1].turn;
             }
-
-
           }
         }
       });
@@ -74,30 +92,28 @@ var app = new Vue({
 
   mounted() {
     this.displayGrid();
-
   },
 
   methods: {
-
-    displayHis(opponentHits) { // showing hits on my opponent 
-      var table = document.getElementById('opponentHistory')
+    displayHis(opponentHits) {
+      // showing hits on my opponent
+      var table = document.getElementById("opponentHistory");
       for (let i = 0; i < opponentHits.length; i++) {
-        var row = document.createElement('tr')
+        var row = document.createElement("tr");
         row.insertCell().innerHTML = opponentHits[i].turnNumber;
         row.insertCell().innerHTML = opponentHits[i].allHitsInTurn;
         table.append(row);
       }
-
     },
 
-    displayHisOpponent(hitsOnMe) { // showing hits on me 
-      var table = document.getElementById('yourHistory')
+    displayHisOpponent(hitsOnMe) {
+      // showing hits on me
+      var table = document.getElementById("yourHistory");
       for (let i = 0; i < hitsOnMe.length; i++) {
-        var row = document.createElement('tr')
+        var row = document.createElement("tr");
         row.insertCell().innerHTML = hitsOnMe[i].turnNumber;
         row.insertCell().innerHTML = hitsOnMe[i].allHitsInTurn;
         table.append(row);
-
       }
     },
 
@@ -116,15 +132,15 @@ var app = new Vue({
         console.log(turn);
 
         $.post({
-            url: `/api/games/players/${gpid}/salvoes`,
-            data: JSON.stringify({
-              turn: turn,
-              location: this.salvoesToSend
-            }),
+          url: `/api/games/players/${gpid}/salvoes`,
+          data: JSON.stringify({
+            turn: turn,
+            location: this.salvoesToSend
+          }),
 
-            dataType: "text",
-            contentType: "application/json"
-          })
+          dataType: "text",
+          contentType: "application/json"
+        })
           .done(res => {
             console.log(res);
             location.reload();
@@ -150,7 +166,9 @@ var app = new Vue({
             // checking if more than 5
             alert("You can not select more than 5 cells!");
           } else if (event.target.style.backgroundColor === "red") {
-            alert("You can not select cells you already fired on in previous turns!");
+            alert(
+              "You can not select cells you already fired on in previous turns!"
+            );
           } else {
             event.target.style.backgroundColor = "yellow";
             this.salvoesToSend.push(event.target.className);
@@ -187,36 +205,37 @@ var app = new Vue({
         let gpid = this.thisGamePlayerId;
 
         $.post({
-            url: `/api/games/players/${gpid}/ships`,
-            data: JSON.stringify([{
-                type: type1,
-                location: location1
-              },
+          url: `/api/games/players/${gpid}/ships`,
+          data: JSON.stringify([
+            {
+              type: type1,
+              location: location1
+            },
 
-              {
-                type: type2,
-                location: location2
-              },
+            {
+              type: type2,
+              location: location2
+            },
 
-              {
-                type: type3,
-                location: location3
-              },
+            {
+              type: type3,
+              location: location3
+            },
 
-              {
-                type: type4,
-                location: location4
-              },
+            {
+              type: type4,
+              location: location4
+            },
 
-              {
-                type: type5,
-                location: location5
-              }
-            ]),
+            {
+              type: type5,
+              location: location5
+            }
+          ]),
 
-            dataType: "text",
-            contentType: "application/json"
-          })
+          dataType: "text",
+          contentType: "application/json"
+        })
           .done(res => {
             console.log(res);
             location.reload();
@@ -257,7 +276,8 @@ var app = new Vue({
       this.showHits(this.opponentSalvoes);
     },
 
-    showHits(salvoes) { // showing where i got hit
+    showHits(salvoes) {
+      // showing where i got hit
 
       let myObj = salvoes[this.opponentGamePlayerId];
 
@@ -266,17 +286,16 @@ var app = new Vue({
           this.allSalvoOpponentLocations.push(myObj[i].Locations);
         }
         this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
-        console.log(this.allSalvoOpponentLocations)
+        console.log(this.allSalvoOpponentLocations);
         for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
           hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
           hitCell.style.backgroundColor = "black";
         }
       }
-
     },
 
-    displayPlayerSalvoes(salvoes) { // showing the salvoes i fired
-
+    displayPlayerSalvoes(salvoes) {
+      // showing the salvoes i fired
 
       let myObj = salvoes[this.data.thisPlayer.gamePlayerId];
       for (var i = 0; i < myObj.length; i++) {
@@ -349,7 +368,7 @@ var app = new Vue({
     },
 
     logout() {
-      $.post("/api/logout").done(function () {
+      $.post("/api/logout").done(function() {
         location.replace(`http://localhost:8080/web/games.html`);
       });
     },

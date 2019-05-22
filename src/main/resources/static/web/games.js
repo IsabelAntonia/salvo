@@ -12,7 +12,9 @@ var vm = new Vue({
         reenterPos: false,
         linkedGamesArray: [],
         joinableGames: [],
-        fullGames: []
+        fullGames: [],
+        openGames: [],
+        overGames: []
 
 
 
@@ -67,7 +69,7 @@ var vm = new Vue({
     methods: {
         buildTable(leaderBoardData) {
 
-        console.log(leaderBoardData)
+            console.log(leaderBoardData)
 
 
             for (var i = 0; i < leaderBoardData.length; i++) {
@@ -218,9 +220,9 @@ var vm = new Vue({
                     for (var j = 0; j < data.games[i].gamePlayers.length; j++) { // two gamePlayers or only one
 
 
-                        if (data.games[i].gamePlayers[j].player.playerId === data.currentUser.playerId) {
+                        if (data.games[i].gamePlayers[j].player.playerId === data.currentUser.playerId) { // if one of the gamePlayers is you
 
-                            this.reenterPos = true;
+                            this.reenterPos = true; // i can reenter the game = linkedGames
 
                             if (!this.linkedGames.includes(data.games[i])) {
 
@@ -230,6 +232,15 @@ var vm = new Vue({
                         }
 
 
+                    }
+                }
+
+
+                for (var h = 0; h < this.linkedGames.length; h++) {
+                    if (this.linkedGames[h].gameOver === true) {
+                        this.overGames.push(this.linkedGames[h]);
+                    } else {
+                        this.openGames.push(this.linkedGames[h])
                     }
                 }
 
@@ -243,39 +254,37 @@ var vm = new Vue({
 
                 }
 
-                         for (var i = 0; i < this.notLinkedGames.length; i++) { // checking if there is only one player
+                for (var i = 0; i < this.notLinkedGames.length; i++) { // checking if there is only one player
 
-                                    for (var j = 0; j < this.notLinkedGames[i].gamePlayers.length; j++) {
+                    for (var j = 0; j < this.notLinkedGames[i].gamePlayers.length; j++) {
 
-                                        if (this.notLinkedGames[i].gamePlayers.length === 1) {
-
-
-
-                                                if (!this.joinableGames.includes(this.notLinkedGames[i])) { // checking if the game is not already in the list
-                                                    this.joinableGames.push(this.notLinkedGames[i]);
-
-                                                }
+                        if (this.notLinkedGames[i].gamePlayers.length === 1) {
 
 
-                                        }
 
-                                        else {
+                            if (!this.joinableGames.includes(this.notLinkedGames[i])) { // checking if the game is not already in the list
+                                this.joinableGames.push(this.notLinkedGames[i]);
 
-                                        if (!this.fullGames.includes(this.notLinkedGames[i])){
-
-                                        this.fullGames.push(this.notLinkedGames[i]);
-                                        }
+                            }
 
 
-                                        }
-                                    }
+                        } else {
+
+                            if (!this.fullGames.includes(this.notLinkedGames[i])) {
+
+                                this.fullGames.push(this.notLinkedGames[i]);
+                            }
 
 
-                                }
+                        }
+                    }
+
+
+                }
 
             } else {
 
-                this.fullGames = data.games;
+                this.fullGames = data.games; // if no one is logged in
 
             }
 
@@ -316,40 +325,40 @@ var vm = new Vue({
                 })
         },
 
-        createGame(){
+        createGame() {
 
-             $.post("/api/games")
-              .done(res => {
+            $.post("/api/games")
+                .done(res => {
 
-              console.log(res.gpid)
-              var pathVar = res.gpid
-              location.replace(`http://localhost:8080/web/game.html?gp=` + pathVar);
-              })
+                    console.log(res.gpid)
+                    var pathVar = res.gpid
+                    location.replace(`http://localhost:8080/web/game.html?gp=` + pathVar);
+                })
 
 
 
-              .fail(res=> {
-              alert(res.responseJSON.message)
-              console.log(res)
-              })
+                .fail(res => {
+                    alert(res.responseJSON.message)
+                    console.log(res)
+                })
 
         },
-            joinGame() {
-                var gameId = event.target.id;
-                console.log(gameId)
+        joinGame() {
+            var gameId = event.target.id;
+            console.log(gameId)
 
-                $.post(`/api/game/${gameId}/players`)
+            $.post(`/api/game/${gameId}/players`)
                 .done(res => {
                     console.log(res.gpid);
                     var pathVar = res.gpid;
                     location.replace(`http://localhost:8080/web/game.html?gp=` + pathVar);
 
                 })
-                 .fail(res=> {
-                              alert(res.responseJSON.message)
-                              console.log(res)
-                              })
-            }
+                .fail(res => {
+                    alert(res.responseJSON.message)
+                    console.log(res)
+                })
+        }
 
 
 
