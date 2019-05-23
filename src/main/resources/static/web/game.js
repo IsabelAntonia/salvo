@@ -26,67 +26,25 @@ var app = new Vue({
     gameOver: false,
     tie: false,
     youWon: false,
-    opponentWon: false
+    opponentWon: false,
+    waiting: false
   },
   beforeCreate() {
     let url = new URLSearchParams(window.location.search);
     let nn = url.get("gp");
+    // setInterval(() => {
+    //   fetch(`../api/game_view/${nn}`)
+    //     .then(response => response.json())
+    //     .then(json => {
+    //       this.data = json;
+    //       this.dispatchJSON();
+    //     });
+    // }, 5000);
     fetch(`../api/game_view/${nn}`)
       .then(response => response.json())
       .then(json => {
         this.data = json;
-        if (this.data.status === "Error") {
-          alert(this.data.message);
-        } else {
-          console.log(this.data);
-          this.thisPlayer = this.data.thisPlayer.playerEmail;
-          this.thisPlayerId = this.data.thisPlayer.playerId;
-          this.players = this.data.Info.gamePlayers;
-          this.thisGamePlayerId = this.data.thisPlayer.gamePlayerId;
-
-          if (this.data.Ships.length === 0) {
-            this.placeShips = true;
-          } else if (this.data.Winner !== "none") {
-            this.gameOver = true;
-            if (this.data.Winner === "tie") {
-              this.tie = true;
-            } else if (this.data.Winner === thisPlayer) {
-              this.youWon = true;
-            } else {
-              this.opponentWon = true;
-            }
-          } else {
-            this.findOpponent();
-            this.displayShips(this.data);
-            this.identifySalvoes(this.data);
-
-            for (let j = 0; j < this.data.gameHistory.length; j++) {
-              if (
-                this.thisGamePlayerId == Object.keys(this.data.gameHistory[j])
-              ) {
-                this.displayHis(
-                  this.data.gameHistory[j][this.thisGamePlayerId]
-                ); // showing hits on my opponent
-              } else {
-                this.displayHisOpponent(
-                  this.data.gameHistory[j][this.opponentGamePlayerId]
-                );
-              }
-            }
-
-            if (this.thisPlayerSalvoes[this.thisGamePlayerId].length === 0) {
-              this.firstSalvo = true;
-            }
-            if (!this.firstSalvo) {
-              let lengthOfSalvoes = this.thisPlayerSalvoes[
-                this.thisGamePlayerId
-              ].length;
-              this.thisPlayerTurn = this.thisPlayerSalvoes[
-                this.thisGamePlayerId
-              ][lengthOfSalvoes - 1].turn;
-            }
-          }
-        }
+        this.evaluateJSON();
       });
   },
 
@@ -95,6 +53,61 @@ var app = new Vue({
   },
 
   methods: {
+    evaluateJSON() {
+      if (this.data.status === "Error") {
+        alert(this.data.message);
+      } else {
+        this.thisPlayer = this.data.thisPlayer.playerEmail;
+        this.thisPlayerId = this.data.thisPlayer.playerId;
+        this.players = this.data.Info.gamePlayers;
+        this.thisGamePlayerId = this.data.thisPlayer.gamePlayerId;
+
+        if (this.data.Ships.length === 0) {
+          this.placeShips = true;
+        } else {
+          if (this.data.Winner !== "none") {
+            this.gameOver = true;
+            if (this.data.Winner === "tie") {
+              this.tie = true;
+            } else if (this.data.Winner === this.thisPlayer) {
+              this.youWon = true;
+            } else {
+              this.findOpponent();
+              this.opponentWon = true;
+            }
+          }
+          if (this.data.waitForOpponent) {
+            this.waiting = true;
+          }
+          this.findOpponent();
+          this.displayShips(this.data);
+          this.identifySalvoes(this.data);
+
+          for (let j = 0; j < this.data.gameHistory.length; j++) {
+            if (
+              this.thisGamePlayerId == Object.keys(this.data.gameHistory[j])
+            ) {
+              this.displayHis(this.data.gameHistory[j][this.thisGamePlayerId]); // showing hits on my opponent
+            } else {
+              this.displayHisOpponent(
+                this.data.gameHistory[j][this.opponentGamePlayerId]
+              );
+            }
+          }
+
+          if (this.thisPlayerSalvoes[this.thisGamePlayerId].length === 0) {
+            this.firstSalvo = true;
+          }
+          if (!this.firstSalvo) {
+            let lengthOfSalvoes = this.thisPlayerSalvoes[this.thisGamePlayerId]
+              .length;
+            this.thisPlayerTurn = this.thisPlayerSalvoes[this.thisGamePlayerId][
+              lengthOfSalvoes - 1
+            ].turn;
+          }
+        }
+      }
+    },
     displayHis(opponentHits) {
       // showing hits on my opponent
       var table = document.getElementById("opponentHistory");
@@ -129,8 +142,6 @@ var app = new Vue({
         }
         let gpid = this.thisGamePlayerId;
 
-        console.log(turn);
-
         $.post({
           url: `/api/games/players/${gpid}/salvoes`,
           data: JSON.stringify({
@@ -145,7 +156,7 @@ var app = new Vue({
             console.log(res);
             location.reload();
           })
-          .fail(err => console.log(err));
+          .fail(res => console.log(res.responseText));
       }
     },
 
@@ -153,6 +164,8 @@ var app = new Vue({
       if (event.target.className.length === 0) {
         // checking if inside grid
         alert("You can only select cells inside the grid!");
+      } else if (this.gameOver) {
+        alert("Game is over!");
       } else {
         if (this.salvoesToSend.includes(event.target.className)) {
           // checking if i have to remove it
@@ -272,6 +285,7 @@ var app = new Vue({
           this.opponentSalvoes = data.Salvoes[i];
         }
       }
+
       this.displayPlayerSalvoes(this.thisPlayerSalvoes);
       this.showHits(this.opponentSalvoes);
     },
@@ -285,8 +299,9 @@ var app = new Vue({
         for (var i = 0; i < myObj.length; i++) {
           this.allSalvoOpponentLocations.push(myObj[i].Locations);
         }
+
         this.allSalvoOpponentLocations = this.allSalvoOpponentLocations.flat();
-        console.log(this.allSalvoOpponentLocations);
+
         for (let j = 0; j < this.allSalvoOpponentLocations.length; j++) {
           hitCell = document.getElementById(this.allSalvoOpponentLocations[j]);
           hitCell.style.backgroundColor = "black";
@@ -302,6 +317,7 @@ var app = new Vue({
         this.allSalvoPlayerLocations.push(myObj[i].Locations);
       }
       this.allSalvoPlayerLocations = this.allSalvoPlayerLocations.flat();
+      console.log(this.allSalvoPlayerLocations);
 
       for (let j = 0; j < this.allSalvoPlayerLocations.length; j++) {
         var className = this.allSalvoPlayerLocations[j];

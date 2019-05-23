@@ -103,6 +103,7 @@ public class SalvoController {
         GamePlayer gamePlayerId = gamePlayerRepository.findById(nn).get();
         gameMapSet.put("Info", createGameMap(gamePlayerId.getGame()));
         gameMapSet.put("Winner", findFinalWinner(gamePlayerId));
+        gameMapSet.put("waitForOpponent", waitForOpponent(gamePlayerId));
         gameMapSet.put("thisPlayer", createThisPlayerMap(gamePlayerId));
         gameMapSet.put("gameHistory", createGameHistory(gamePlayerId.getGame().gamePlayer)); // getting two gameplayers
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
@@ -368,12 +369,18 @@ public class SalvoController {
                return new ResponseEntity<>(makeMapforStatus("Error", "You fired already in this turn!"), HttpStatus.FORBIDDEN);
            } // the user has already submitted a salvo for the turn listed
 
-           else if (gameOver(gP)){
+           else if (gameIsOver(gP.getGame())){
                return new ResponseEntity<>(makeMapforStatus("Error", "Game is over!"), HttpStatus.FORBIDDEN);
            }
+
+           else if (waitForOpponent(gP)){
+               return new ResponseEntity<>(makeMapforStatus("Error", "Wait for opponent"), HttpStatus.FORBIDDEN);
+           }
            else {
+
                gP.addSalvo(salvo);
                salvoRepository.save(salvo);
+               setScore(gP);
                return new ResponseEntity<>(makeMapforStatus("Success", "Salvo was fired!"),HttpStatus.CREATED);
 
            }
@@ -392,41 +399,69 @@ public class SalvoController {
         String noWinner = "none";
 
 
-        if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) != 17 && findTotalHits(gameplayer.salvoes) == 17 && (findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
-            Score score = new Score(1, gameplayer.getGame(), gameplayer.getPlayer()); // this Player on
-            scoreRepository.save(score);
-            return gameplayer.getPlayer().getEmail();
+        if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) != 17 && findTotalHits(gameplayer.salvoes) == 17 &&
+                findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
+            return gameplayer.getPlayer().getEmail(); // this gameplayer wins
         }
 
-        else if (findTotalHits(gameplayer.salvoes) != 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && (findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo()))){
-            Score score = new Score(1, gameplayer.getGame(), gameplayer.getGame().getOpponent(gameplayer).getPlayer()); // this Player on
-            scoreRepository.save(score);
+        else if (findTotalHits(gameplayer.salvoes) != 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 &&
+                findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
             return gameplayer.getGame().getOpponent(gameplayer).getPlayer().getEmail();
         }
 
         else if (findTotalHits(gameplayer.salvoes) == 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
-
-            Score scoreOp = new Score(0.5, gameplayer.getGame(), gameplayer.getGame().getOpponent(gameplayer).getPlayer()); // this Player on
-            Score score = new Score(0.5, gameplayer.getGame(), gameplayer.getPlayer()); // this Player on
-            scoreRepository.save(score);
-            scoreRepository.save(scoreOp);
             return tied ;
         }
 
         return noWinner;
     }
 
-    private boolean gameOver (GamePlayer gameplayer){
+    private void setScore(GamePlayer gameplayer){
 
-        if (gameplayer.getGame().getScore().size() == 2){
+        if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) != 17 && findTotalHits(gameplayer.salvoes) == 17 &&
+                findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
+            Score score = new Score(1, gameplayer.getGame(), gameplayer.getPlayer());
+            scoreRepository.save(score);
+            Score scoreOp = new Score(0, gameplayer.getGame(), gameplayer.getGame().getOpponent(gameplayer).getPlayer());
+            scoreRepository.save(scoreOp);
+
+        }
+
+        else if (findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && findTotalHits(gameplayer.salvoes) != 17 &&
+                findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
+            Score score = new Score(0, gameplayer.getGame(), gameplayer.getPlayer());
+            scoreRepository.save(score);
+            Score scoreOp = new Score(1, gameplayer.getGame(), gameplayer.getGame().getOpponent(gameplayer).getPlayer());
+            scoreRepository.save(scoreOp);
+
+        }
+
+        else if (findTotalHits(gameplayer.salvoes) == 17 && findTotalHits(gameplayer.getGame().getOpponent(gameplayer).getSalvo()) == 17 && findLastTurn(gameplayer.salvoes) == findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
+
+            Score score = new Score(0.5, gameplayer.getGame(), gameplayer.getPlayer());
+            scoreRepository.save(score);
+            Score scoreOp = new Score(0.5, gameplayer.getGame(), gameplayer.getGame().getOpponent(gameplayer).getPlayer());
+            scoreRepository.save(scoreOp);
+
+        }
+
+    }
+
+
+
+
+
+
+    private boolean gameIsOver (Game game){
+
+        if (game.getScore().size() != 0){
             return true;
         }
         return false;
     }
 
-    private boolean gameIsOver (Game game){
-
-        if (game.getScore().size() == 2){
+    private boolean waitForOpponent(GamePlayer gameplayer){
+        if (findLastTurn(gameplayer.salvoes) > findLastTurn(gameplayer.getGame().getOpponent(gameplayer).getSalvo())){
             return true;
         }
         return false;

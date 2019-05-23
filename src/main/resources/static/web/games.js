@@ -165,7 +165,8 @@ var vm = new Vue({
 
                 })
                 .fail(function () {
-                    console.log('uups')
+                   alert('Your email or your password was not correct.')
+
                 })
         },
 

@@ -159,7 +159,9 @@
     <h2>Your Field</h2>
     <table @drop="drop(event)" @dragover="allowDrop(event)" cellspacing="0" id="table"></table>
 
-    <div v-if="!placeShips">
+    <h2 v-if="waiting">Waiting for your opponent to fire salvo!</h2>
+
+    <div v-if="!placeShips && !waiting">
       <br />
       <br />
       <h2>Battlefield of opponent displaying your salvoes!</h2>
