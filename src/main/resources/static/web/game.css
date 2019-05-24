@@ -1,79 +1,144 @@
-  td {
-      width: 40px;
-      height: 40px;
-      text-align: center;
-      border: 1px solid black;
-  }
+ html {
+     font-size: 62.5%;
+
+ }
+
+ body {
+     padding: 4rem;
+
+ }
 
 
-  input {
-      border: 1px solid black;
-  }
+ ul,
+ ol {
+     list-style: none;
+ }
 
-  section {
-      margin-bottom: 30px;
-  }
+ button {
+     padding: 1.2rem;
+     cursor: pointer;
+     opacity: 0.8;
+     font-size: 1.4rem;
+     background-color: #F92306;
+     color: white;
+     letter-spacing: 1px;
+     margin: 0 1rem 1rem 0rem;
+
+ }
+
+ #fakeTable {
+     height: 484px;
+     width: 484px;
+     position: absolute;
+     right: 29rem;
+     top: 49rem;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background-color: grey;
+     font-size: 1.8rem;
+ }
+
+ section {
+     font-size: 1.2rem;
+     margin-bottom: 1rem;
+     /* border: 2px solid #F92306; */
+     background-color: #77B5EF;
+ }
+
+ .bigShips>ul {
+     padding-right: 8rem;
+ }
+
+ #shipPlacingHeader {
+     display: flex;
+     flex-wrap: wrap;
+ }
+
+ li {
+     padding: 0.5rem;
+ }
+
+ h2 {
+     font-size: 2rem;
+ }
+
+ button:focus {
+     outline: 0;
+ }
+
+ button:hover {
+     opacity: 1;
+ }
+
+ body {
+     font-family: "Raleway", sans-serif;
+ }
+
+ td {
+     width: 40px;
+     height: 40px;
+     text-align: center;
+     border: 1px solid black;
+ }
 
 
-  .bigShips,
-  .smallShips {
-      display: flex;
-  }
+ input {
+     border: 1px solid black;
+ }
 
-  #table {
-      display: inline-table;
-      table-layout: fixed;
-  }
+ .bigShips,
+ .smallShips {
+     display: flex;
+ }
 
-
-  .form {
-
-      font-size: small;
-      background-color: red;
-      height: 40px;
-      text-align: center;
-      width: 40px;
-      cursor: pointer;
-
-  }
-
-    #dragAir:after,
-    #dragBat:after,
-    #dragDes:after,
-    #dragSub:after,
-    #dragPat:after {
-        content: '';
-        position: relative;
-        left: 40px;
-        top: -15px;
-        border-style: solid;
-        border-color: red;
-        display: block;
-        width: 0;
-        cursor: default !important;
-
-    }
+ #table {
+     display: inline-table;
+     table-layout: fixed;
+ }
 
 
-  ul {
-      border: 1px solid black;
-      padding: 10px 100px;
-  }
+ .form {
 
-    #dragAir:after {
-        border-width: 25px 176px 15px 0;
-    }
+     font-size: small;
+     background-color: darkblue;
+     height: 40px;
+     text-align: center;
+     width: 40px;
+     cursor: pointer;
+
+ }
+
+ #dragAir:after,
+ #dragBat:after,
+ #dragDes:after,
+ #dragSub:after,
+ #dragPat:after {
+     content: '';
+     position: relative;
+     left: 40px;
+     border-style: solid;
+     border-color: darkblue;
+     display: block;
+     width: 0;
+     cursor: default !important;
+
+ }
+
+ #dragAir:after {
+     border-width: 25px 176px 15px 0;
+ }
 
 
-    #dragBat:after {
-        border-width: 25px 132px 15px 0;
-    }
+ #dragBat:after {
+     border-width: 25px 132px 15px 0;
+ }
 
-    #dragDes:after,
-    #dragSub:after {
-        border-width: 25px 88px 15px 0;
-    }
+ #dragDes:after,
+ #dragSub:after {
+     border-width: 25px 88px 15px 0;
+ }
 
-    #dragPat:after {
-        border-width: 25px 44px 15px 0;
-    }
+ #dragPat:after {
+     border-width: 25px 44px 15px 0;
+ }
