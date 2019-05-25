@@ -78,74 +78,65 @@
               If you are not happy with a position of a ship, you can change it.
             </li>
             <li>
-              After you've placed all ships successfully on the grid, click on
-              the Done button down below.
+              After you've placed all ships on the grid, click on
+              Done.
             </li>
             <li>
-              Notice that after you clicked Done, you will not be able to change
+              After you clicked Done, you will not be able to change
               the position of your ships anymore.
             </li>
           </ul>
         </section>
 
-        <section class="forms">
-          <div class="bigShips">
-            <ul>
-              <div
-                id="dragAir"
-                draggable="true"
-                @dragstart="drag(event)"
-                class="form"
-              ></div>
-              <li>Name: Aircraft Carrier</li>
-              <li>Length: 5</li>
-            </ul>
+        <section>
+          <div id="bigShips">
 
-            <ul>
-              <div
-                id="dragBat"
-                draggable="true"
-                @dragstart="drag(event)"
-                class="form"
-              ></div>
-              <li>Name: Battleship</li>
-              <li>Length: 4</li>
-            </ul>
+            <div id="dragAirDiv">
+              <div id="dragAir" draggable="true" @dragstart="drag(event)" class="form"></div>
+              <div class="textBigShip">
+                Name: Aircraft Carrier
+                <br>
+                Length: 5</div>
+            </div>
+
+
+            <div id="dragBatDiv">
+              <div id="dragBat" draggable="true" @dragstart="drag(event)" class="form"></div>
+              <div class="textBigShip">
+              Name: Battleship
+                <br>
+              Length: 4
+              </div>
+            </div>
           </div>
 
-          <div class="smallShips">
-            <ul>
-              <div
-                id="dragSub"
-                draggable="true"
-                @dragstart="drag(event)"
-                class="form"
-              ></div>
-              <li>Name: Submarine</li>
-              <li>Length: 3</li>
-            </ul>
+          <div id="smallShips">
+            <div id="dragSubDiv">
+              <div id="dragSub" draggable="true" @dragstart="drag(event)" class="form"></div>
+              <div class="textSmallShip">
+              Name: Submarine
+                <br>
+              Length: 3
+              </div>
+            </div>
 
-            <ul>
-              <div
-                id="dragDes"
-                draggable="true"
-                @dragstart="drag(event)"
-                class="form"
-              ></div>
-              <li>Name: Destroyer</li>
-              <li>Length: 3</li>
-            </ul>
+            <div id="dragDesDiv">
+              <div id="dragDes" draggable="true" @dragstart="drag(event)" class="form"></div>
+              <div class="textSmallShip">
+              Name: Destroyer
+                <br>
+              Length: 3
+              </div>
+            </div>
 
-            <ul>
-              <div
-                id="dragPat"
-                draggable="true"
-                @dragstart="drag(event)"
-                class="form"
-              ></div>
-              <li>Name: Patrol Boat</li>
-              <li>Length: 2</li>
-            </ul>
+            <div id="dragPatDiv">
+              <div id="dragPat" draggable="true" @dragstart="drag(event)" class="form"></div>
+              <div class="textSmallShip">
+              Name: Patrol Boat
+                <br>
+              Length: 2
+              </div>
+            </div>
           </div>
         </section>
       </div>
