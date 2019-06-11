@@ -48,11 +48,32 @@ var app = new Vue({
       });
   },
 
+  created(){
+
+  this.calcHeight();
+
+  },
+
   mounted() {
     this.displayGrid();
   },
 
   methods: {
+
+
+  calcHeight(){
+
+
+   var pos = $("#yourField").offset().top;
+
+   pos = $("#yourField").position().top;
+
+      $('#opTable').offset({ top: pos - 640});
+      $('#fakeTable').offset({ top: pos - 560});
+
+
+  },
+
     evaluateJSON() {
       if (this.data.status === "Error") {
         alert(this.data.message);
