@@ -161,7 +161,7 @@
     </table>
   </div>
 
-  <h2 id="yourField">Your Field</h2>
+  <h2>Your Field</h2>
   <table
           @drop="drop(event)"
           @dragover="allowDrop(event)"
@@ -175,7 +175,7 @@
   </div>
 
 
-  <div id="opTable" class="position" v-if="!placeShips && !waiting">
+  <div v-if="!placeShips && !waiting">
     <br />
     <br />
     <h2>Battlefield of opponent displaying your salvoes!</h2>
