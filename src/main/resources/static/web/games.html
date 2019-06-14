@@ -75,8 +75,7 @@
         <button @click="createGame()">Create new game</button>
 
 
-
-
+        <p>Top 25 players and their scores.</p>
         <table>
 
             <thead>
@@ -90,6 +89,25 @@
             <tbody id="table"></tbody>
 
         </table>
+
+        <div v-if="!loginPos">
+        <p>This is your score table.</p>
+        <table>
+
+            <thead>
+            <th>You</th>
+            <th>TotalScore</th>
+            <th>Won</th>
+            <th>Lost</th>
+            <th>Tied</th>
+            </thead>
+
+            <tbody id="myScoreTable">
+            </tbody>
+
+        </table>
+
+        </div>
 
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
