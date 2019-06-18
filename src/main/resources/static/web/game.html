@@ -17,10 +17,20 @@
   <button @click="logout()">LOGOUT</button>
   <button @click="location.href='games.html';">GAMES</button>
 
+
+  <h1 v-if="waitJoin">
+
+    Awesome! You created this game.<br>
+    <br>
+    Please wait for another player to join the game. When a player joins you will be able to place your ships.</h1>
+
+  <div v-else>
   <h1 v-if="!placeShips">{{ thisPlayer }} (you) vs. {{ opponent }}</h1>
 
+
+
   <h2 v-if="placeShips">
-    It is time to place your ships, {{ thisPlayer }}!
+   Great! {{opponent}} and you are now playing. It is time to place your ships!
   </h2>
   <h2 v-if="firstSalvo">It is time to fire your first salvo!</h2>
 
@@ -43,6 +53,8 @@
           >
         </li>
         <li>When you are happy with the cells you selected, click Done.</li>
+        <li>Notice, that you will be able to see your hits only after your opponent has placed his ships.</li>
+        <li>You can make your first salvo even though the opponent is not done with ship placement or hasn't even started placing his ships.</li>
       </ul>
     </section>
   </div>
@@ -141,7 +153,12 @@
     </section>
   </div>
 
-  <div v-if="!placeShips">
+
+    <h2 v-if="!bothShips">
+     << As soon as your opponent has placed his ships you will see your hits here! >>
+    </h2>
+
+  <div v-if="!placeShips && bothShips">
     <h2>Hits on you!</h2>
     <table>
       <thead>
@@ -186,6 +203,7 @@
   </div>
 
   <button @click="postShip()" v-if="placeShips">DONE</button>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>

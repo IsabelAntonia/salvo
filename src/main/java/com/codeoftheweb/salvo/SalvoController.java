@@ -50,8 +50,17 @@ public class SalvoController {
 
         if (requestedGP.getPlayer() == authenticatedUser(authentication)){
 
+            if (requestedGP.getGame().getNumberOfPlayers() == 1) {
+                return new ResponseEntity<>(makeMapforStatus("Success","Wait for another player to join game"),HttpStatus.OK);
+            }// check if other player exists
+
+            else {
+
             return new ResponseEntity<>(findgamePlayer(nn), HttpStatus.OK);
+            }
         }
+
+
 
         else {
             return new ResponseEntity<>(makeMapforStatus("Error", "You are unauthorized to see this page!"), HttpStatus.UNAUTHORIZED);
@@ -108,8 +117,11 @@ public class SalvoController {
         gameMapSet.put("gameHistory", createGameHistory(gamePlayerId.getGame().gamePlayer)); // getting two gameplayers
         gameMapSet.put("Ships", createShipMap(gamePlayerId.getShips()));
         gameMapSet.put("Salvoes", createSalvoMaps(gamePlayerId.getGame().gamePlayer)); // salvo
+        gameMapSet.put("opponentPlacedShips", checkIfOpPlacedShips(gamePlayerId));
         return gameMapSet;
     }
+
+
 
 
     @RequestMapping("/games") // see all games and the related information
@@ -466,6 +478,14 @@ public class SalvoController {
         }
         return false;
     }
+
+    private boolean checkIfOpPlacedShips(GamePlayer gameplayer){
+        if (gameplayer.getGame().getOpponent(gameplayer).ships.size() == 5){ // opponent has already placed all  his ships
+            return true;
+        }
+        return false;
+    }
+
 
 
 

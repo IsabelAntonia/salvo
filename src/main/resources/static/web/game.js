@@ -28,7 +28,9 @@ var app = new Vue({
         youWon: false,
         opponentWon: false,
         waiting: false,
-        setTable: null
+        setTable: null,
+        waitJoin: null,
+        bothShips: null
     },
     beforeCreate() {
 
@@ -47,6 +49,7 @@ var app = new Vue({
             .then(response => response.json())
             .then(json => {
                 this.data = json;
+                console.log(this.data)
                 this.evaluateJSON();
 
             });
@@ -62,21 +65,33 @@ var app = new Vue({
         evaluateJSON() {
             if (this.data.status === "Error") {
                 alert(this.data.message);
-            } else {
+            }
 
+
+            else if (this.data.message === "Wait for another player to join game"){
+
+                    this.waitJoin = true;
+
+            }
+
+
+            else {
                 // Variablen Setter
                 this.thisPlayer = this.data.thisPlayer.playerEmail;
                 this.thisPlayerId = this.data.thisPlayer.playerId;
                 this.players = this.data.Info.gamePlayers;
                 this.thisGamePlayerId = this.data.thisPlayer.gamePlayerId;
+                this.findOpponent();
 
                 if (this.data.Ships.length === 0) { // placing ships view
                     this.placeShips = true;
                 } else {
-                    this.findOpponent();
                     this.displayShips(this.data);
                     this.identifySalvoes(this.data);
-                    // function calls for history
+                    // function calls for history if opponent has placed ships
+if (this.data.opponentPlacedShips == true ){
+
+                   this.bothShips = true;
                     for (let j = 0; j < this.data.gameHistory.length; j++) {
                         if (
                             this.thisGamePlayerId == Object.keys(this.data.gameHistory[j])
@@ -88,7 +103,11 @@ var app = new Vue({
                             );
                         }
                     }
+}
 
+else {
+this.bothShips = false;
+}
                     // check for states
 
                     if (this.data.Winner !== "none") { // check if Game over
