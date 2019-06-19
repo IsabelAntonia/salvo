@@ -231,7 +231,13 @@ this.bothShips = false;
                 this.dragBatLocations.length === 0
             ) {
                 alert("You have to place all ships in order to start the game");
-            } else {
+            }
+
+
+
+            else {
+
+                console.log(this.dragPatLocations)
                 let type1 = "Patrol Boat";
                 let location1 = this.dragPatLocations;
 
@@ -282,7 +288,7 @@ this.bothShips = false;
                     })
                     .done(res => {
                         console.log(res);
-                        location.reload();
+//                        location.reload();
                     })
                     .fail(err => console.log(err));
             }

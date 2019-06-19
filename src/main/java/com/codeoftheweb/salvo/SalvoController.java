@@ -336,9 +336,36 @@ public class SalvoController {
         return map;
     }
 
+
+    private boolean overLapShip (List<Ship> newShip){
+        List<String> locList = new ArrayList<>();
+        for (Ship ship : newShip){
+            for (String loc : ship.getLocation()){
+                if (locList.contains(loc)){
+                    return true;
+                }
+
+                else {
+                    locList.add(loc);
+                }
+
+
+            }
+        }
+        return false;
+    }
+
     @RequestMapping (value ="/games/players/{gpid}/ships", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> addPlacedShips(@PathVariable long gpid, @RequestBody Set<Ship> newShip, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> addPlacedShips(@PathVariable long gpid, @RequestBody List<Ship> newShip, Authentication authentication) {
         GamePlayer gP = gamePlayerRepository.findById(gpid);
+        List<Integer> sizeList = new ArrayList<>();
+
+
+
+        for (Ship ship : newShip) {
+            sizeList.add(ship.getLocation().size());
+        }
+
         if (authentication != null) {
 
             if (gP.getPlayer() != authenticatedUser(authentication)){ // authenticated user has to be gpid
@@ -348,6 +375,16 @@ public class SalvoController {
 
                 if(gP.ships.size() > 5 || newShip.size() > 5){ // check if user has not already placed ships
                     return new ResponseEntity<>(makeMapforStatus("Error", "You can not place more than 5 ships!"), HttpStatus.FORBIDDEN);
+                }
+
+// Patrol Boat (2), Aircraft Carrier (5), Submarine (3), Battleship (4), Destroyer (3)
+
+                else if (sizeList.get(0) != 2 || sizeList.get(1) != 5 || sizeList.get(2) != 3 || sizeList.get(3) != 4 || sizeList.get(4) != 3){
+                    return new ResponseEntity<>(makeMapforStatus("Error", "Ships are not in the right size!"), HttpStatus.FORBIDDEN);
+                }
+
+                else if (overLapShip(newShip) == true){
+                    return new ResponseEntity<>(makeMapforStatus("Error", "Ships can not overlap!"), HttpStatus.FORBIDDEN);
                 }
 
                 else {
@@ -458,7 +495,6 @@ public class SalvoController {
         }
 
     }
-
 
 
 
