@@ -57,7 +57,6 @@ var app = new Vue({
 
     mounted() {
         this.displayGrid();
-
     },
 
     methods: {
@@ -140,25 +139,28 @@ this.bothShips = false;
             // showing hits on my opponent
 
             var table = document.getElementById("opponentHistory");
-            table.innerHTML = '';
+            if (table != null){table.innerHTML = '';}
+
             for (let i = 0; i < opponentHits.length; i++) {
                 var row = document.createElement("tr");
                 row.insertCell().innerHTML = opponentHits[i].turnNumber;
                 row.insertCell().innerHTML = opponentHits[i].allHitsInTurn;
-                table.append(row);
+                 if (table != null){table.append(row);}
+
             }
         },
 
         displayHisOpponent(hitsOnMe) {
             // showing hits on me
 
-            var table = document.getElementById("yourHistory");
-            table.innerHTML = '';
+          var table = document.getElementById("yourHistory");
+            if (table != null){table.innerHTML = '';}
             for (let i = 0; i < hitsOnMe.length; i++) {
                 var row = document.createElement("tr");
                 row.insertCell().innerHTML = hitsOnMe[i].turnNumber;
                 row.insertCell().innerHTML = hitsOnMe[i].allHitsInTurn;
-                table.append(row);
+                if (table != null){table.append(row);}
+
             }
         },
 
@@ -288,7 +290,7 @@ this.bothShips = false;
                     })
                     .done(res => {
                         console.log(res);
-//                        location.reload();
+                        location.reload();
                     })
                     .fail(err => console.log(err));
             }

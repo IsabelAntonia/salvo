@@ -425,6 +425,10 @@ public class SalvoController {
            else if (waitForOpponent(gP)){
                return new ResponseEntity<>(makeMapforStatus("Error", "Wait for opponent"), HttpStatus.FORBIDDEN);
            }
+
+           else if (salvo.getLocation().size() != 5){
+               return new ResponseEntity<>(makeMapforStatus("Error", "A salvo is compromised of 5 shots. Your salvo has not the right size and is therefore rejected by the server."), HttpStatus.FORBIDDEN);
+           }
            else {
 
                gP.addSalvo(salvo);

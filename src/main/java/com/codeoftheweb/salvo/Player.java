@@ -14,6 +14,7 @@ public class Player {
     private long id;
 
     @OneToMany(mappedBy="player", fetch= FetchType.EAGER)
+    @OrderBy("id asc")
     Set<GamePlayer> gamePlayer;
 
     @OneToMany(mappedBy = "player", fetch= FetchType.EAGER)

@@ -21,52 +21,86 @@
 
         <button v-else @click="logout()">Logout</button>
 
-        <p v-if="!loginPos">Welcome, {{data.currentUser.playerEmail}}</p>
+        <h1 v-if="!loginPos">Welcome, {{data.currentUser.playerEmail}}</h1>
 
-        <p v-if="reenterPos">Re-enter a game!</p>
+        <h2 v-if="reenterPos">Games you are part of:</h2>
 
-        <div v-for="game in overGames">
-            <ol>
-                <li><a @click="insertPathVariable()" :id="game.GameId" style="color: red; cursor: pointer"
-                        class="linked">GameId: {{game.GameId}}</a><span>This Game is over!</span></li>
-                <li>creationDate: {{game.creationDate}}</li>
-                <li>GamePlayers: {{game.gamePlayers}}</li>
-            </ol>
 
+        <div v-for="game in openGames" class="openGames">
+
+            <span>{{game.GameId}}</span>
+            <span>{{game.gamePlayers[0].player.playerEmail}}</span>
+            <span>vs.</span>
+            <span>{{game.gamePlayers[1].player.playerEmail}}</span>
+            <span><a @click="insertPathVariable()" :id="game.GameId" class="linked">Play game!</a></span>
         </div>
 
-        <div v-for="game in openGames">
-            <ol>
-                <li><a @click="insertPathVariable()" :id="game.GameId" style="color: green; cursor: pointer"
-                        class="linked">GameId: {{game.GameId}}</a><span>Play game!</span></li>
-                <li>creationDate: {{game.creationDate}}</li>
-                <li>GamePlayers: {{game.gamePlayers}}</li>
-            </ol>
+        <div v-for="game in noOpGames" class="noOpGames">
+
+            <span>{{game.GameId}}</span>
+            <span>{{game.gamePlayers[0].player.playerEmail}}</span>
+            <span><a @click="insertPathVariable()" :id="game.GameId" class="linked">Wait for opponent to
+                    join!</a></span>
         </div>
+
+
+
+        <div v-for="game in overGames" class="overGames">
+
+            <span>{{game.GameId}}</span>
+            <span>{{game.gamePlayers[0].player.playerEmail}}</span>
+            <span>vs.</span>
+            <span>{{game.gamePlayers[1].player.playerEmail}}</span>
+            <span><a @click="insertPathVariable()" :id="game.GameId" class="linked">Game is over!</a></span>
+        </div>
+
 
         <hr v-if="reenterPos">
 
-        <p v-if="reenterPos">Here are all other games. Join a game that is looking for a player or create a new game!
-        </p>
+        <h2>Games that need a player:
+        </h2>
 
-        <div v-for="game in fullGames">
+        <div v-for="game in joinableGames" class="joinableGames">
+            <span>{{game.GameId}}</span>
+            <span>{{game.gamePlayers[0].player.playerEmail}}</span>
+            <span><a @click="joinGame()" :id="game.GameId">Join Game</a></span>
+            <!-- <button :id="game.GameId" @click="joinGame()">Join Game</button> -->
+        </div>
+
+        <hr>
+
+        <h2>All games:
+        </h2>
+        <div v-for="game in fullGames" class="fullGames">
+
+            <span>{{game.GameId}}</span>
+            <span>{{game.gamePlayers[0].player.playerEmail}}</span>
+            <span>vs.</span>
+            <span>{{game.gamePlayers[1].player.playerEmail}}</span>
+        </div>
+
+
+        <!-- <div v-for="game in fullGames">
             <ol>
                 <li>GameId: {{game.GameId}}</li>
                 <li>creationDate: {{game.creationDate}}</li>
                 <li>GamePlayers: {{game.gamePlayers}}</li>
 
             </ol>
-        </div>
+        </div> -->
 
-        <div v-for="game in joinableGames">
-            <ol>
-                <li>GameId: {{game.GameId}}</li>
-                <li>creationDate: {{game.creationDate}}</li>
-                <li>GamePlayers: {{game.gamePlayers}}</li>
-                <li><button :id="game.GameId" @click="joinGame()">Join Game {{game.GameId}}</button></li>
 
-            </ol>
-        </div>
+
+        <!-- <div v-for="game in joinableGames">
+        <ol>
+            <li>GameId: {{game.GameId}}</li>
+            <li>creationDate: {{game.creationDate}}</li>
+            <li>GamePlayers: {{game.gamePlayers}}</li>
+            <li><button :id="game.GameId" @click="joinGame()">Join Game {{game.GameId}}</button></li>
+
+        </ol>
+    </div> -->
+
 
 
 
@@ -91,21 +125,21 @@
         </table>
 
         <div v-if="!loginPos">
-        <p>This is your score table.</p>
-        <table>
+            <p>This is your score table.</p>
+            <table>
 
-            <thead>
-            <th>You</th>
-            <th>TotalScore</th>
-            <th>Won</th>
-            <th>Lost</th>
-            <th>Tied</th>
-            </thead>
+                <thead>
+                    <th>You</th>
+                    <th>TotalScore</th>
+                    <th>Won</th>
+                    <th>Lost</th>
+                    <th>Tied</th>
+                </thead>
 
-            <tbody id="myScoreTable">
-            </tbody>
+                <tbody id="myScoreTable">
+                </tbody>
 
-        </table>
+            </table>
 
         </div>
 
